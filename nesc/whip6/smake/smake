@@ -1,0 +1,60 @@
+#!/usr/bin/env python
+#
+# whip6: Warsaw High-performance IPv6.
+#
+# Copyright (c) 2012-2016 InviNets Sp z o.o.
+# All rights reserved.
+#
+# This file is distributed under the terms in the attached LICENSE     
+# files. If you do not find these files, copies can be found by writing
+# to technology@invinets.com.
+#
+
+# Finds smake directory in current working dir or
+# in any of it's parrents and uses it to build the app.
+
+import os
+import sys
+
+def check_for_smake(path):
+  if not os.path.isdir(path):
+    return None
+
+  candidate = os.path.join(path, 'smake')
+  if os.path.exists(candidate) and os.path.isdir(candidate):
+    return candidate
+
+def rec_find_smake(current_root):
+  if current_root == os.path.dirname(current_root):
+    return None
+
+  cand = check_for_smake(current_root)
+
+  if cand:
+    return cand
+  else:
+    return rec_find_smake(os.path.dirname(current_root))
+
+
+def main():
+  smake_path = rec_find_smake(os.getcwd())
+
+  if smake_path:
+    # We might encounter a symlink. Go through it to the actual repo root.
+    smake_path = os.path.realpath(smake_path)
+    # path[0] is the path at which this file is located.
+    # Replace it with the found smake root
+    sys.path[0] = smake_path
+
+    import smake_impl
+    smake = smake_impl.SMake(os.path.dirname(smake_path))
+    smake.run()
+
+  else:
+    sys.stderr.write('smake project dir not found\n')
+    sys.stderr.write('If you are using a repo-split setup, make sure you have a symlink nesc/whip6/smake pointing to'
+                     ' the smake/ dir in the base repository\n')
+    sys.exit(-1)
+
+if __name__ == '__main__':
+    main()

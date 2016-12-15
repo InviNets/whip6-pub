@@ -1,0 +1,4 @@
+See:
+ - platforms/boards/cc26xxbased/sensortag2/scif_pwrtest
+ - apps/SCIFPowerTest
+for an example usage of the Sensor Controller.

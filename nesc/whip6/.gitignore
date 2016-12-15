@@ -1,0 +1,7 @@
+/.cache
+.pydevproject
+frontend.log
+repo_manifest.txt
+*.pb.c
+*.pb.h
+/prv

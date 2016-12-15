@@ -1,0 +1,89 @@
+include $(PROJECT_ROOT)/platforms/parts/mcu/cortex-m3/Makefile.common
+
+LDSCRIPT = $(PROJECT_ROOT)/platforms/parts/mcu/cc26xx/cc26xx.lds
+TARGET ?= app
+
+BOOTLOADER = $(PROJECT_ROOT)/platforms/parts/mcu/cc26xx/native/bootloader/bootloader.elf
+
+LIBRARIES += -lm
+
+### Don't treat the .elf as intermediate
+.PRECIOUS: %.elf %.hex %.bin
+
+### Compilation rules
+
+all: $(TARGET).hex $(TARGET).nobl.dfu.bin $(TARGET).nobl.lst \
+	$(TARGET).nobl.sym $(TARGET).nobl.flash.sizes $(TARGET).nobl.ram.sizes \
+	$(TARGET).workingcopy.hex
+
+$(TARGET).workingcopy.hex: $(TARGET).hex
+	ln -s $< $@
+
+$(TARGET).hex: $(TARGET).nobl.hex
+	if [ -f bootloader.hex ]; then \
+		srec_cat $(TARGET).nobl.hex -intel bootloader.hex -intel -o $@ -intel; \
+	else \
+		cp $(TARGET).nobl.hex $@; \
+	fi
+
+$(TARGET).nobl.elf: $(OBJS)
+	@echo "Linking..."
+	@$(LD) -save-temps $(LDFLAGS) -Wl,-\( $(OBJS) $(LIBRARIES) -Wl,-\) -o $@
+	
+	@echo "Generating version string..."
+	@printf "$(APP_NAME) " > $(TARGET).version.bin
+	@printf "`git -C "$(PROJECT_ROOT)" rev-parse --short HEAD``[ -z "$$(git -C "$(PROJECT_ROOT)" status --porcelain)" ] || echo +`" >> $(TARGET).version.bin
+	@if [ -d "$(ALT_PROJECT_ROOT)" ]; then \
+		printf "/`git -C "$(ALT_PROJECT_ROOT)" rev-parse --short HEAD``[ -z "$$(git -C "$(ALT_PROJECT_ROOT)" status --porcelain)" ] || echo +`" >> $(TARGET).version.bin; \
+	fi
+	@printf " `LC_ALL=C date +%Y%m%d%H%M%S`/`hostname`\0" >> $(TARGET).version.bin
+	@echo
+	@echo "Version string:"
+	@printf "   "
+	@cat $(TARGET).version.bin
+	@echo
+	@if ! $(OBJCOPY) --update-section .appversion=$(TARGET).version.bin $@; then \
+		echo; \
+		echo "Your toolchain is too old. Binutils >= 2.26 is required."; \
+		echo "Get one here: https://developer.arm.com/open-source/gnu-toolchain/gnu-rm/downloads"; \
+		echo; \
+		echo "--- The produced binary will not contain the version string. ---"; \
+	fi
+	
+	@echo
+	@echo "Size report:"
+	@$(OBJDUMP) -h $@ | perl -ne '$$b{$$1}=hex $$2 if /^\s*\d+\s*\.(text|data|bss|heap|minstack|appversion|flog|bootloader)\s+(\S+)/; END { printf("%8d bytes in ROM\n%8d bytes in RAM\n",$$b{text}+$$b{data}+$$b{appversion}+$$b{flog}+$$b{bootloader},$$b{data}+$$b{bss}+$$b{heap}+$$b{minstack}); }'
+	@echo
+
+%.hex: %.elf
+	$(OBJCOPY) -O ihex $< $@
+
+%.bin: %.elf
+	$(OBJCOPY) $(OBJCOPY_FLAGS) -R .ccfg $< $@
+
+%.dfu.bin: %.bin
+	if [ -x "$(PROJECT_ROOT)/platforms/parts/mcu/cc26xx/native/bootloader/scripts/bin2dfu.py" ]; then \
+		$(PROJECT_ROOT)/platforms/parts/mcu/cc26xx/native/bootloader/scripts/bin2dfu.py \
+			-k $(PROJECT_ROOT)/platforms/parts/mcu/cc26xx/native/bootloader/key.bin \
+			-i $< -o $@; \
+	fi
+
+%.lst: %.elf
+	$(OBJDUMP) $(OBJDUMP_FLAGS) $< > $@
+
+%.sym: %.elf
+	$(NM) -n $< > $@
+
+$(TARGET).workingcopy.o: $(TARGET).workingcopy.c
+	grep -v -E '^#( |line)' $(TARGET).workingcopy.c > x.c
+	mv -f x.c $(TARGET).workingcopy.c
+	@echo "Compiling $(TARGET).workingcopy.c..."
+	@$(CC) $(CFLAGS) -c $< -o $@
+
+%.o: %.c
+
+%.flash.sizes: %.elf
+	$(NM) -f posix $< | $(SYMBOLS2SIZES) -k flash $@
+
+%.ram.sizes: %.elf
+	$(NM) -f posix $< | $(SYMBOLS2SIZES) -k ram $@

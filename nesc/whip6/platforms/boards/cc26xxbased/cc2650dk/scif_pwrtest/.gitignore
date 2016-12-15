@@ -1,0 +1,3 @@
+scif_framework.*
+scif_osal_*
+*.o

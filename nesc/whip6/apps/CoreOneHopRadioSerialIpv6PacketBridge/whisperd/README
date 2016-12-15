@@ -1,0 +1,10 @@
+This application communicates between the app and the created TUN interface.
+
+It has been moved to a seperate repo to facilitate integration with the
+router software.
+
+Use the following command to checkout:
+
+  git clone ssh://gerrit.whiptronics.com:29418/whip6-whisperd.git
+
+A simple UDP server source code is left here.

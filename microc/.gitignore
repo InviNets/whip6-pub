@@ -1,0 +1,7 @@
+*.asm
+*.lst
+*.o
+*.sym
+*.rel
+/target/**/*.h
+/obj/uc*

@@ -1,0 +1,7 @@
+This is an example usage of Sensor Controller code.
+
+The corresponding app is SCIFPowerTest.
+
+The *.scp file is a TI Sensor Controller Studio-compatible project file.
+Only scif_pwrtest.{c,h} and optionally the assembly listing file should
+be committed to the repository (see .gitignore).

@@ -1,0 +1,8 @@
+*.pyc
+errors.err
+*.swp
+.regen_times.spec
+.DS_Store
+nesc/whip6/.project
+nesc/whip6/.targetsOptions
+nesc/whip6/TinyOS_Plugin_Makefile

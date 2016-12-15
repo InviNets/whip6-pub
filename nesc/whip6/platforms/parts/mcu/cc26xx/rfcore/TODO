@@ -1,0 +1,2 @@
+- fix all TODOs
+- separate BLE from the main driver using the RFCoreClaim interfaces, proper arbiters etc.

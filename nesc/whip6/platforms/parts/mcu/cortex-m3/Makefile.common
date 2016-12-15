@@ -1,0 +1,36 @@
+CC      = arm-none-eabi-gcc
+CPP     = arm-none-eabi-cpp
+LD      = arm-none-eabi-gcc
+AS      = arm-none-eabi-as
+AR      = arm-none-eabi-ar
+OBJCOPY = arm-none-eabi-objcopy
+OBJDUMP = arm-none-eabi-objdump
+NM      = arm-none-eabi-nm
+
+SYMBOLS2SIZES = $(PROJECT_ROOT)/platforms/parts/mcu/cortex-m3/scripts/symbols2sizes.py
+
+OPTIMIZATION_FLAGS = -flto -ffat-lto-objects -Os -g
+#OPTIMIZATION_FLAGS = -Os -g -ffunction-sections -fdata-sections
+#OPTIMIZATION_FLAGS = -O0 -g -ffunction-sections -fdata-sections
+
+CFLAGS += -mcpu=cortex-m3 -mthumb -mlittle-endian
+CFLAGS += -fshort-enums -fomit-frame-pointer -fno-strict-aliasing
+CFLAGS += -fno-builtin-printf -fno-builtin-sprintf -fno-builtin-snprintf
+CFLAGS += -fno-builtin-vprintf
+CFLAGS += -Wall -Werror
+CFLAGS += -std=c99
+CFLAGS += $(OPTIMIZATION_FLAGS)
+LDFLAGS += $(CFLAGS)
+LDFLAGS += -nostdlib -nostdinc
+LDFLAGS += -T $(LDSCRIPT)
+LDFLAGS += -Wl,--gc-sections,--sort-section=alignment
+LDFLAGS += -Wl,-Map=app.map,--cref,--no-warn-mismatch
+LIBRARIES += -lgcc
+OBJCOPY_FLAGS += -O binary --gap-fill 0xff
+OBJDUMP_FLAGS += -h --disassemble --source --disassembler-options=force-thumb
+
+%.o: %.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+%.o: %.S
+	$(CC) $(CFLAGS) -c $< -o $@

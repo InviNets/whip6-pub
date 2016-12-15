@@ -1,0 +1,17 @@
+This application reads data from the CoreRadioSniffer app and writes
+the dump to stdout in libpcap format.
+
+Dependencies:
+ - cmake (for compilation)
+ - libpcap-dev
+
+To compile, use standard CMake:
+
+  mkdir build
+  cd build
+  cmake ..
+  make
+
+To run:
+
+  ./whispersniffer /dev/ttyACM0 | wireshark -k -i -

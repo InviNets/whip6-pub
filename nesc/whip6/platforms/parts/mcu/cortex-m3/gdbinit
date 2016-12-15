@@ -1,0 +1,19 @@
+define unwind-fault
+    set $sav_r0 = tf->ef->r0
+    set $r1 = tf->ef->r1
+    set $r2 = tf->ef->r2
+    set $r3 = tf->ef->r3
+    set $r4 = tf->r4
+    set $r5 = tf->r5
+    set $r6 = tf->r6
+    set $r7 = tf->r7
+    set $r8 = tf->r8
+    set $r9 = tf->r9
+    set $r10 = tf->r10
+    set $r11 = tf->r11
+    set $r12 = tf->r12
+    set $lr = tf->ef->lr
+    set $xPSR = tf->ef->psr
+    set $pc = tf->ef->pc
+    set $r0 = $sav_r0
+end

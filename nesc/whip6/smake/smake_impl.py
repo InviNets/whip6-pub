@@ -218,7 +218,7 @@ class SMake(object):
     board_names = set(self.boards.keys());
     if BOARDS in config:
         board_names &= set(config[BOARDS])
-    return board_names
+    return list(board_names)
 
   def _show_board_targets(self, brd):
     # Read configurations recursively

@@ -37,8 +37,8 @@ static const uint16_t pAuxRamImage[] = {
     /*0x0060*/ 0x9D88, 0x9C01, 0xB60D, 0x1067, 0xAF19, 0xAA00, 0xB609, 0xA8FF, 0xAF39, 0xBE06, 0x0C6B, 0x8869, 0x8F08, 0xFD47, 0x9DB7, 0x086B, 
     /*0x0080*/ 0x8801, 0x8A01, 0xBEEC, 0x262F, 0xAEFE, 0x4630, 0x0451, 0x5527, 0x6642, 0x0000, 0x0C6B, 0x140B, 0x0451, 0x6742, 0x86FF, 0x03FF, 
     /*0x00A0*/ 0x0C6D, 0x786C, 0xCD47, 0x686D, 0xCD06, 0xB605, 0x0000, 0x0C6C, 0x7C6F, 0x652D, 0x0C6D, 0x786D, 0xF801, 0xE92B, 0xFD0E, 0xBE01, 
-    /*0x00C0*/ 0x6436, 0xBDB7, 0x241A, 0xA6FE, 0xADB7, 0x641A, 0xADB7, 0x0000, 0x018A, 0x018B, 0x018D, 0x0000, 0x0000, 0xFFFF, 0x0000, 0x0000, 
-    /*0x00E0*/ 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0016, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 
+    /*0x00C0*/ 0x6436, 0xBDB7, 0x241A, 0xA6FE, 0xADB7, 0x641A, 0xADB7, 0x0000, 0x0375, 0x0376, 0x0378, 0x0000, 0x0000, 0xFFFF, 0x0000, 0x0000, 
+    /*0x00E0*/ 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 
     /*0x0100*/ 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 
     /*0x0120*/ 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 
     /*0x0140*/ 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 
@@ -55,26 +55,41 @@ static const uint16_t pAuxRamImage[] = {
     /*0x02A0*/ 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 
     /*0x02C0*/ 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 
     /*0x02E0*/ 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 
-    /*0x0300*/ 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0xADB7, 0x158E, 0xADB7, 0xADB7, 0x5000, 0x2877, 
-    /*0x0320*/ 0x01A9, 0x0EB2, 0x01D3, 0x0EB3, 0x8602, 0x0249, 0x0EB4, 0x8602, 0x029B, 0x0EB5, 0x8602, 0x02A6, 0x0EB6, 0x0AB3, 0xCDB1, 0x9DB7, 
-    /*0x0340*/ 0x0AB5, 0xCDB1, 0x9DB7, 0x0AB3, 0xCDB1, 0x9DB7, 0x0AB6, 0xCDB1, 0x8DB7, 0x6988, 0x1989, 0x9D2E, 0xB604, 0x9878, 0xEF09, 0x11B2, 
-    /*0x0360*/ 0x1EB2, 0xADB7, 0x8600, 0xEAFF, 0x9E03, 0x86FF, 0xE800, 0x8E04, 0x540F, 0x7008, 0x11BD, 0x1EB2, 0xADB7, 0xEC01, 0xBE02, 0x540F, 
-    /*0x0380*/ 0x8E01, 0x740F, 0xEDA9, 0xF8FF, 0xBE02, 0x11C8, 0x1EB2, 0xADB7, 0x11A9, 0x1EB2, 0x740F, 0x1989, 0x9801, 0x8601, 0x9A00, 0xAE01, 
-    /*0x03A0*/ 0x1000, 0x1D89, 0xADB7, 0xDA00, 0x9E09, 0xD8FF, 0xBE07, 0x8608, 0xC200, 0xCF2B, 0x1980, 0x9202, 0x1D80, 0xADB7, 0x0984, 0x1985, 
-    /*0x03C0*/ 0x8D29, 0x9E0E, 0xAA00, 0xB605, 0xA8FF, 0x3513, 0xAE01, 0x2877, 0xADB7, 0x8602, 0x129E, 0x1EB5, 0x8602, 0x12A9, 0x1EB6, 0x0D85, 
-    /*0x03E0*/ 0xADB7, 0x8602, 0x029B, 0x0EB5, 0x8602, 0x02A6, 0x0EB6, 0x01D3, 0x0EB3, 0x5000, 0x5D85, 0x2877, 0xADB7, 0x8602, 0x129B, 0x1EB5, 
-    /*0x0400*/ 0x8602, 0x12A6, 0x1EB6, 0x5008, 0x4000, 0x3986, 0x8601, 0xB878, 0x8602, 0x120C, 0x1EB3, 0xADB7, 0xCDA9, 0x8602, 0x1211, 0x1EB3, 
-    /*0x0420*/ 0xADB7, 0xFD47, 0x3513, 0xA601, 0xC280, 0xD8FF, 0xBE03, 0x8602, 0x121E, 0x8E02, 0x8602, 0x120C, 0x1EB3, 0xADB7, 0x5986, 0xD801, 
-    /*0x0440*/ 0xDA08, 0xAE01, 0x5000, 0x8602, 0x0227, 0x0EB3, 0xADB7, 0xFD47, 0x3513, 0xAE0B, 0xCCFF, 0xBE03, 0x8602, 0xC200, 0x8E02, 0x8601, 
-    /*0x0460*/ 0xC200, 0x1980, 0x9204, 0x1D80, 0xADB7, 0x01D3, 0x0EB3, 0x8602, 0x029E, 0x0EB5, 0x8602, 0x02A9, 0x0EB6, 0x0987, 0xDD28, 0xBE05, 
-    /*0x0480*/ 0x8604, 0xC200, 0xCF2B, 0x5876, 0xADB7, 0xCF2B, 0x5D86, 0x5876, 0xADB7, 0x1983, 0x9A00, 0xB601, 0xADB7, 0x0984, 0x1985, 0x8D29, 
-    /*0x04A0*/ 0xA602, 0x01F1, 0x0EB3, 0x8602, 0x0257, 0x0EB4, 0x059D, 0x0873, 0x0D82, 0x1980, 0x9D00, 0x9006, 0x1D80, 0x8602, 0x0261, 0x0EB4, 
-    /*0x04C0*/ 0x059D, 0x0986, 0x1987, 0x8D19, 0xD601, 0x8808, 0x0EB1, 0x8602, 0x026B, 0x0EB4, 0x059D, 0x0AB1, 0x1874, 0x8D29, 0xAE03, 0x0980, 
-    /*0x04E0*/ 0x8201, 0x0D80, 0x8602, 0x0276, 0x0EB4, 0x059D, 0x0988, 0x1989, 0x8D19, 0xD602, 0x8601, 0x8800, 0x0EB1, 0x8602, 0x0281, 0x0EB4, 
-    /*0x0500*/ 0x059D, 0x0AB1, 0x1875, 0x8D29, 0x9603, 0x0980, 0x8208, 0x0D80, 0x8602, 0x028C, 0x0EB4, 0x059D, 0x0981, 0x8A00, 0xBE08, 0x0980, 
-    /*0x0520*/ 0x1982, 0x8D01, 0xB604, 0x0D81, 0x652D, 0x0000, 0x0D80, 0x8602, 0x0249, 0x0EB4, 0x059D, 0x0AB2, 0xFD47, 0x8E03, 0x0AB2, 0x3513, 
-    /*0x0540*/ 0xA602, 0xFD47, 0x8E02, 0x11FD, 0x1EB3, 0x8DB7, 0x0AB4, 0xFD47, 0x8E03, 0x0AB4, 0x3513, 0xA602, 0xFD47, 0x8E02, 0x11FD, 0x1EB3, 
-    /*0x0560*/ 0x8DB7, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000
+    /*0x0300*/ 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 
+    /*0x0320*/ 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 
+    /*0x0340*/ 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 
+    /*0x0360*/ 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 
+    /*0x0380*/ 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 
+    /*0x03A0*/ 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 
+    /*0x03C0*/ 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 
+    /*0x03E0*/ 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 
+    /*0x0400*/ 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 
+    /*0x0420*/ 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 
+    /*0x0440*/ 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 
+    /*0x0460*/ 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 
+    /*0x0480*/ 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 
+    /*0x04A0*/ 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 
+    /*0x04C0*/ 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 
+    /*0x04E0*/ 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 
+    /*0x0500*/ 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 
+    /*0x0520*/ 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 
+    /*0x0540*/ 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 
+    /*0x0560*/ 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 
+    /*0x0580*/ 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 
+    /*0x05A0*/ 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 
+    /*0x05C0*/ 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 
+    /*0x05E0*/ 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 
+    /*0x0600*/ 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 
+    /*0x0620*/ 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 
+    /*0x0640*/ 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 
+    /*0x0660*/ 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 
+    /*0x0680*/ 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 
+    /*0x06A0*/ 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 
+    /*0x06C0*/ 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 
+    /*0x06E0*/ 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0xADB7, 0x1779, 0xADB7, 0xADB7, 0x8603, 0x0380, 0x0FAC, 0x6000, 0x0BAC, 0xCDB1, 0x8DB7, 
+    /*0x0700*/ 0xED36, 0xBE06, 0x2B73, 0x1B74, 0x9D2A, 0xB605, 0x9873, 0xEF09, 0x8603, 0x138C, 0x1FAC, 0x077D, 0x540F, 0x7008, 0x8603, 0x1392, 
+    /*0x0720*/ 0x1FAC, 0x077D, 0xEC01, 0xBE02, 0x540F, 0x8E01, 0x740F, 0xEDA9, 0xF8FF, 0xBE03, 0x8603, 0x139E, 0x1FAC, 0x077D, 0x8603, 0x1380, 
+    /*0x0740*/ 0x1FAC, 0x740F, 0xED36, 0xBED9, 0x1B74, 0x9801, 0x8603, 0x9A00, 0xAE01, 0x1000, 0x1F74, 0x077D, 0x0000
 };
 
 
@@ -93,7 +108,7 @@ static const uint8_t pAuxIoIndexToMcuIocfgOffsetLut[] = {
   */
 static const uint32_t pScifTaskDataStructInfoLut[] = {
 //  cfg         input       output      state       
-    0x005010E6, 0x100010F0, 0x008012F0, 0x00A01300  // UART Emulator
+    0x00000000, 0x300010E6, 0x00000000, 0x002016E6  // UART Emulator
 };
 
 
@@ -172,74 +187,6 @@ const SCIF_DATA_T scifDriverSetup = {
 
 
 
-/** \brief Sets the RX byte timeout
-  *
-  * The RX timeout starts once a byte has been received. The last received byte is flagged (see
-  * \ref scifUartRxGetChar()) when the UART RX line has been idle for the specified period of time.
-  *
-  * \note This function must only be called while the UART receiver is disabled!
-  *
-  * \param[in]      rxTimeout
-  *     Timeout in half bit periods
-  */
-void scifUartSetRxTimeout(uint16_t rxTimeout) {
-    scifTaskData.uartEmulator.cfg.rxByteTimeout = rxTimeout;
-} // scifUartSetRxTimeout
-
-
-
-
-/** \brief Sets the number of required idle bit periods when enabling the UART receiver
-  *
-  * To prevent enabling RX in the middle of a byte and receiving garbage data, the required idle count
-  * should be set to 20 (or more). After calling \c scifUartRxEnable(1), start bit detection is enabled
-  * once the RX line has been idle (high) for the specified period of time
-  *
-  * \note This function must only be called while the UART receiver is disabled!
-  *
-  * \param[in]      rxEnableReqIdleCount
-  *     Required idle time in number of half bit periods
-  */
-void scifUartSetRxEnableReqIdleCount(uint16_t rxEnableReqIdleCount) {
-    scifTaskData.uartEmulator.cfg.rxEnableReqIdleCount = rxEnableReqIdleCount;
-} // scifUartSetRxEnableReqIdleCount
-
-
-
-
-/** \brief Enables or disables the UART receiver
-  *
-  * When enabling, the UART begins detecting start bit after the configurable required idle period (see
-  * \ref scifUartSetRxEnableReqIdleCount()).
-  *
-  * When disabling, the UART receiver will be deactivated within one bit-period. Any ongoing byte
-  * reception is aborted. Note that this also prevents RX timeout for the last received byte.
-  *
-  * \param[in]      rxEnable
-  *     True to enable RX, false to disable RX
-  */
-void scifUartRxEnable(uint16_t rxEnable) {
-    scifTaskData.uartEmulator.state.rxEnable = rxEnable;
-} // scifUartRxEnable
-
-
-
-
-/** \brief Stops the UART emulator
-  *
-  * When running the UART emulation task, the execution code runs continuously, and can only be stopped
-  * by calling this function. This stops the UART emulator within one bit period.
-  *
-  * \note This function must only be called while the UART baud generator is active, and baud rate
-  *       generation must not be disabled until the stop operation has taken effect.
-  */
-void scifUartStopEmulator(void) {
-    scifTaskData.uartEmulator.state.exit = 1;
-} // scifUartStopEmulator
-
-
-
-
 /** \brief Sets the UART baud rate
   *
   * This function must be called to start baud rate generation before or after starting the UART
@@ -256,7 +203,7 @@ void scifUartSetBaudRate(uint32_t baudRate) {
     if (baudRate) {
 
         // Calculate the AUX timer 0 period
-        t0Period = 24000000 / (4 * baudRate);
+        t0Period = 24000000 / baudRate;
 
         // The period must be 256 clock cycles or less, so up the prescaler until it is
         t0PrescalerExp = 0;
@@ -285,161 +232,14 @@ void scifUartSetBaudRate(uint32_t baudRate) {
 
 
 
-/** \brief Sets ALERT event threshold for the RX FIFO
+/** \brief Calculates the number of cells currently used in the TX FIFO
   *
-  * \param[in]      threshold
-  *     Number of bytes (or higher) in the RX FIFO that triggers ALERT interrupt
-  */
-void scifUartSetRxFifoThr(uint16_t threshold) {
-    scifTaskData.uartEmulator.cfg.alertRxFifoThr = threshold;
-} // scifUartSetRxFifoThr
-
-
-
-
-/** \brief Calculates the number of bytes currently stored in the RX FIFO
+  * The TX FIFO is divided into 2-byte cells and only a whole cell can be used.
   *
-  * Note that the RX FIFO can only store the configured number of characters minus one. This number is
-  * defined by \ref SCIF_UART_RX_FIFO_MAX_COUNT.
+  * The count is decremented when all characters from the current cell (stop bits of the last one) are transmitted.
   *
   * \return
-  *     The number of characters in the RX FIFO, ready to be read
-  */
-uint32_t scifUartGetRxFifoCount(void) {
-    uint16_t rxTail = scifTaskData.uartEmulator.state.rxTail;
-    uint16_t rxHead = scifTaskData.uartEmulator.state.rxHead;
-    if (rxHead < rxTail) {
-        rxHead += sizeof(scifTaskData.uartEmulator.output.pRxBuffer) / sizeof(uint16_t);
-    }
-    return rxHead - rxTail;
-} // scifUartGetRxFifoCount
-
-
-
-
-/** \brief Receives a single character, with flags
-  *
-  * This function must only be called when there is at least one character in the RX FIFO. Calling this
-  * function when the FIFO is empty will cause underflow, without warning.
-  *
-  * \return
-  *     The received character, with flags:
-  *     - [15:12] - Reserved
-  *     - [11] - RX timeout occurred after receiving this character
-  *     - [10] - RX FIFO ran full when receiving this character (this character may be invalid)
-  *     - [9] - Break occurred when receiving this character
-  *     - [8] - Framing error occurred when receiving this character
-  *     - [7:0] - The character value
-  */
-uint16_t scifUartRxGetChar(void) {
-
-    // Get the character
-    uint32_t rxTail = scifTaskData.uartEmulator.state.rxTail;
-    uint16_t c = scifTaskData.uartEmulator.output.pRxBuffer[rxTail];
-
-    // Update the TX FIFO head index
-    if (++rxTail == (sizeof(scifTaskData.uartEmulator.output.pRxBuffer) / sizeof(uint16_t))) {
-        rxTail = 0;
-    }
-    scifTaskData.uartEmulator.state.rxTail = (uint16_t) rxTail;
-
-    return c;
-} // scifUartRxGetChar
-
-
-
-
-/** \brief Receives the specified number of character, without flags
-  *
-  * This function must only be called with count equal to or less than the current RX FIFO count. Calling
-  * this function with too high count will cause underflow, without warning.
-  *
-  * \param[in,out]  *pBuffer
-  *     Pointer to the character destination buffer
-  * \param[in]      count
-  *     Number of characters to get
-  */
-void scifUartRxGetChars(char* pBuffer, uint32_t count) {
-    int n;
-
-    // For each character ...
-    uint32_t rxTail = scifTaskData.uartEmulator.state.rxTail;
-    for (n = 0; n < count; n++) {
-
-        // Get it
-        pBuffer[n] = (char) scifTaskData.uartEmulator.output.pRxBuffer[rxTail];
-
-        // Update the TX FIFO head index
-        if (++rxTail == (sizeof(scifTaskData.uartEmulator.output.pRxBuffer) / sizeof(uint16_t))) {
-            rxTail = 0;
-        }
-    }
-    scifTaskData.uartEmulator.state.rxTail = (uint16_t) rxTail;
-
-} // scifUartRxGetChars
-
-
-
-
-/** \brief Receives the specified number of character, with flags
-  *
-  * This function must only be called with count equal to or less than the current RX FIFO count. Calling
-  * this function with too high count will cause underflow, without warning.
-  *
-  * \param[in,out]  *pBuffer
-  *     Pointer to the character destination buffer. Each entry contains the following
-  *     - [15:12] - Reserved
-  *     - [11] - RX timeout occurred after receiving this character
-  *     - [10] - RX FIFO ran full when receiving this character (this character may be invalid)
-  *     - [9] - Break occurred when receiving this character
-  *     - [8] - Framing error occurred when receiving this character
-  *     - [7:0] - The character value
-  * \param[in]      count
-  *     Number of characters to get
-  */
-void scifUartRxGetCharsWithFlags(uint16_t* pBuffer, uint32_t count) {
-    int n;
-
-    // For each character ...
-    uint32_t rxTail = scifTaskData.uartEmulator.state.rxTail;
-    for (n = 0; n < count; n++) {
-
-        // Get it
-        pBuffer[n] = scifTaskData.uartEmulator.output.pRxBuffer[rxTail];
-
-        // Update the TX FIFO head index
-        if (++rxTail == (sizeof(scifTaskData.uartEmulator.output.pRxBuffer) / sizeof(uint16_t))) {
-            rxTail = 0;
-        }
-    }
-    scifTaskData.uartEmulator.state.rxTail = (uint16_t) rxTail;
-
-} // scifUartRxGetCharsWithFlags
-
-
-
-
-/** \brief Sets ALERT event threshold for the TX FIFO
-  *
-  * \param[in]      threshold
-  *     Number of bytes (or lower) in the TX FIFO that triggers ALERT interrupt
-  */
-void scifUartSetTxFifoThr(uint16_t threshold) {
-    scifTaskData.uartEmulator.cfg.alertTxFifoThr = threshold;
-} // scifUartSetTxFifoThr
-
-
-
-
-/** \brief Calculates the number of bytes currently stored in the TX FIFO
-  *
-  * The count is decremented when a character's stop bits are transmitted.
-  *
-  * Note that the TX FIFO can only store the configured number of characters minus one. This number is
-  * defined by \ref SCIF_UART_TX_FIFO_MAX_COUNT.
-  *
-  * \return
-  *     The number of characters in the TX FIFO, waiting to be transmitted
+  *     The number of cells used in the TX FIFO, waiting to be transmitted
   */
 uint32_t scifUartGetTxFifoCount(void) {
     uint16_t txTail = scifTaskData.uartEmulator.state.txTail;
@@ -453,10 +253,42 @@ uint32_t scifUartGetTxFifoCount(void) {
 
 
 
-/** \brief Transmits a single character, without delay
+/** \brief Transmits two characters
   *
-  * This function must not be called when the TX FIFO is full. Calling this function when the FIFO is
-  * full will cause overflow, without warning. The number of free entries in the FIFO is:
+  * This function must not be called when the TX FIFO is full. Both characters use only one TX FIFO cell.
+  * Calling this function when the FIFO is full will cause overflow, without warning. The number of free cells in the FIFO is:
+  * \code
+  * SCIF_UART_TX_FIFO_MAX_COUNT - scifUartGetTxFifoCount()
+  * \endcode
+  *
+  * \param[in]      c1
+  *     The first character to transmit
+  * \param[in]      c2
+  *     The second character to transmit
+  */
+void scifUartTxPutTwoChars(char c1, char c2) {
+
+    // Put the character
+    uint32_t txHead = scifTaskData.uartEmulator.state.txHead;
+    uint16_t entry = c2;
+    entry <<= 8;
+    entry |= c1;
+    scifTaskData.uartEmulator.input.pTxBuffer[txHead] = entry;
+
+    // Update the TX FIFO head index
+    if (++txHead == (sizeof(scifTaskData.uartEmulator.input.pTxBuffer) / sizeof(uint16_t))) {
+        txHead = 0;
+    }
+    scifTaskData.uartEmulator.state.txHead = (uint16_t) txHead;
+
+} // scifUartTxPutTwoChars
+
+
+
+/** \brief Transmits one character
+  *
+  * This function must not be called when the TX FIFO is full.
+  * Calling this function when the FIFO is full will cause overflow, without warning. The number of free cells in the FIFO is:
   * \code
   * SCIF_UART_TX_FIFO_MAX_COUNT - scifUartGetTxFifoCount()
   * \endcode
@@ -465,48 +297,8 @@ uint32_t scifUartGetTxFifoCount(void) {
   *     The character to transmit
   */
 void scifUartTxPutChar(char c) {
-
-    // Put the character
-    uint32_t txHead = scifTaskData.uartEmulator.state.txHead;
-    scifTaskData.uartEmulator.input.pTxBuffer[txHead] = c;
-
-    // Update the TX FIFO head index
-    if (++txHead == (sizeof(scifTaskData.uartEmulator.input.pTxBuffer) / sizeof(uint16_t))) {
-        txHead = 0;
-    }
-    scifTaskData.uartEmulator.state.txHead = (uint16_t) txHead;
-
+    scifUartTxPutTwoChars(c, 0);
 } // scifUartTxPutChar
-
-
-
-
-/** \brief Transmits a single character, after the specified delay
-  *
-  * This function must not be called when the TX FIFO is full. Calling this function when the FIFO is
-  * full will cause overflow, without warning. The number of free entries in the FIFO is:
-  * \code
-  * SCIF_UART_TX_FIFO_MAX_COUNT - scifUartGetTxFifoCount()
-  * \endcode
-  *
-  * \param[in]      c
-  *     The character to transmit
-  * \param[in]      delay
-  *     Delay inserted before this character is transmitted, given in number of bits
-  */
-void scifUartTxPutCharDelayed(char c, uint8_t delay) {
-
-    // Put the character, with delay
-    uint32_t txHead = scifTaskData.uartEmulator.state.txHead;
-    scifTaskData.uartEmulator.input.pTxBuffer[txHead] = (delay << 8) | c;
-
-    // Update the TX FIFO head index
-    if (++txHead == (sizeof(scifTaskData.uartEmulator.input.pTxBuffer) / sizeof(uint16_t))) {
-        txHead = 0;
-    }
-    scifTaskData.uartEmulator.state.txHead = (uint16_t) txHead;
-
-} // scifUartTxPutCharDelayed
 
 
 
@@ -527,13 +319,21 @@ void scifUartTxPutCharDelayed(char c, uint8_t delay) {
   */
 void scifUartTxPutChars(char* pBuffer, uint32_t count) {
     int n;
+    uint16_t entry;
 
     // For each character ...
     uint32_t txHead = scifTaskData.uartEmulator.state.txHead;
-    for (n = 0; n < count; n++) {
-
+    for (n = 0; n < count; n += 2) {
         // Get it
-        scifTaskData.uartEmulator.input.pTxBuffer[txHead] = pBuffer[n];
+        if (n + 1 == count) {
+            entry = pBuffer[n];
+        } else {
+            entry = pBuffer[n+1];
+            entry <<= 8;
+            entry |= pBuffer[n];
+        }
+
+        scifTaskData.uartEmulator.input.pTxBuffer[txHead] = entry;
 
         // Update the TX FIFO head index
         if (++txHead == (sizeof(scifTaskData.uartEmulator.input.pTxBuffer) / sizeof(uint16_t))) {
@@ -545,61 +345,7 @@ void scifUartTxPutChars(char* pBuffer, uint32_t count) {
 } // scifUartTxPutChars
 
 
-
-
-/** \brief Returns the SCIF UART events that had occurred when the last ALERT interrupt was generated
-  *
-  * This function does not return any new events until \ref scifUartClearEvents() has been called. Events
-  * that have occurred in the meantime are stored in a backlog.
-  *
-  * The reported events exclude masked-out events (see \ref scifUartSetEventMask()).
-  *
-  * \return
-  *     Bit-vector of the events that have occurred (one or more of the following):
-  *     - \ref BV_SCIF_UART_ALERT_RX_FIFO_ABOVE_THR
-  *     - \ref BV_SCIF_UART_ALERT_RX_BYTE_TIMEOUT
-  *     - \ref BV_SCIF_UART_ALERT_RX_BREAK_OR_FRAMING_ERROR
-  *     - \ref BV_SCIF_UART_ALERT_TX_FIFO_BELOW_THR
-  */
-uint16_t scifUartGetEvents(void) {
-    return scifTaskData.uartEmulator.state.alertEvents;
-} // scifUartGetEvents
-
-
-
-
-/** \brief Clears the SCIF UART events reported by the last call to \ref scifUartGetEvents()
-  *
-  * This function must be called to get further event reports through ALERT interrupts.
-  */
-void scifUartClearEvents(void) {
-    scifTaskData.uartEmulator.state.alertEvents = 0x0000;
-} // scifUartClearEvents
-
-
-
-
-/** \brief Select which SCIF UART events that shall trigger the ALERT interrupt
-  *
-  * The ALERT interrupt is generated when one or more of the events included in the mask occur.
-  *
-  * \param[in]      mask
-  *     Bit-vector of the events that shall generate the ALERT interrupt (zero or more of the following):
-  *     - \ref BV_SCIF_UART_ALERT_RX_FIFO_ABOVE_THR
-  *     - \ref BV_SCIF_UART_ALERT_RX_BYTE_TIMEOUT
-  *     - \ref BV_SCIF_UART_ALERT_RX_BREAK_OR_FRAMING_ERROR
-  *     - \ref BV_SCIF_UART_ALERT_TX_FIFO_BELOW_THR
-  */
-void scifUartSetEventMask(uint16_t mask) {
-
-    // Disable all events temporarily to avoid unwanted FIFO events
-    scifTaskData.uartEmulator.cfg.alertMask           = mask;
-    scifTaskData.uartEmulator.state.alertMask         = 0x0000;
-
-} // scifUartSetEventMask
-
-
 //@}
 
 
-// Generated by DESKTOP-DACKC3I at 2017-02-12 11:13:36.578
+// Generated by DESKTOP-DACKC3I at 2017-02-21 21:51:02.621

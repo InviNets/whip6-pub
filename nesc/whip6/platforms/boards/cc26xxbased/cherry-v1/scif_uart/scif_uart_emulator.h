@@ -10,7 +10,7 @@
   * - <b>Tool version</b>:     1.3.1.42689
   * - <b>Tool patches</b>:     None
   * - <b>Target chip</b>:      CC2650, revision -, package QFN48 7x7 RGZ
-  * - <b>Created</b>:          2017-02-12 11:13:36.578
+  * - <b>Created</b>:          2017-02-12 11:31:56.126
   * - <b>Computer</b>:         DESKTOP-DACKC3I
   * - <b>User</b>:             badge
   *
@@ -128,49 +128,23 @@
 #pragma pack(push, 2)
 
 
-/// UART Emulator: Task configuration structure
-typedef struct {
-    uint16_t alertMask;            ///< Bit-vector selecting which UART events trigger ALERT interrupt
-    uint16_t alertRxFifoThr;       ///< Number of bytes (or higher) in the RX FIFO that triggers ALERT interrupt
-    uint16_t alertTxFifoThr;       ///< Number of bytes (or lower) in the TX FIFO that triggers ALERT interrupt
-    uint16_t rxByteTimeout;        ///< Maximum number of idle half bit-periods after a received byte before indicating timeout
-    uint16_t rxEnableReqIdleCount; ///< Required number of idle half-bits before enabling RX.
-} SCIF_UART_EMULATOR_CFG_T;
-
-
 /// UART Emulator: Task input data structure
 typedef struct {
-    uint16_t pTxBuffer[256]; ///< TX FIFO ring buffer
+    uint16_t pTxBuffer[768]; ///< TX FIFO ring buffer
 } SCIF_UART_EMULATOR_INPUT_T;
-
-
-/// UART Emulator: Task output data structure
-typedef struct {
-    uint16_t pRxBuffer[8]; ///< RX FIFO ring buffer
-} SCIF_UART_EMULATOR_OUTPUT_T;
 
 
 /// UART Emulator: Task state structure
 typedef struct {
-    uint16_t alertBacklog; ///< Bit-vector of events not yet communicated to the application
-    uint16_t alertEvents;  ///< Bit-vector of events communicated to the application in the last ALERT interrupt
-    uint16_t alertMask;    ///< Currently used ALERT interrupt mask
-    uint16_t exit;         ///< Set to exit the UART emulator
-    uint16_t rxEnable;     ///< Set to enable RX, or clear to disable RX (controls whether start bits are detected)
-    uint16_t rxEnabled;    ///< Is RX currently enabled?
-    uint16_t rxHead;       ///< RX FIFO head index (updated by the Sensor Controller)
-    uint16_t rxTail;       ///< RX FIFO tail index (updated by the application)
-    uint16_t txHead;       ///< TX FIFO head index (updated by the application)
-    uint16_t txTail;       ///< TX FIFO tail index (updated by the Sensor Controller)
+    uint16_t txHead; ///< TX FIFO head index (updated by the application)
+    uint16_t txTail; ///< TX FIFO tail index (updated by the Sensor Controller)
 } SCIF_UART_EMULATOR_STATE_T;
 
 
 /// Sensor Controller task data (configuration, input buffer(s), output buffer(s) and internal state)
 typedef struct {
     struct {
-        SCIF_UART_EMULATOR_CFG_T cfg;
         SCIF_UART_EMULATOR_INPUT_T input;
-        SCIF_UART_EMULATOR_OUTPUT_T output;
         SCIF_UART_EMULATOR_STATE_T state;
     } uartEmulator;
 } SCIF_TASK_DATA_T;
@@ -192,58 +166,19 @@ void scifReinitTaskIo(uint32_t bvTaskIds);
 
 
 /// Maximum number of characters that can be stored in the UART TX FIFO
-#define SCIF_UART_TX_FIFO_MAX_COUNT                  255
-/// Maximum number of characters that can be stored in the UART RX FIFO
-#define SCIF_UART_RX_FIFO_MAX_COUNT                  7
+#define SCIF_UART_TX_FIFO_MAX_COUNT                  767
 
-/// RX character flag: RX timeout occurred after receiving this character
-#define BV_SCIF_UART_RX_TIMEOUT                      0x0800
-/// RX character flag: RX FIFO ran full when receiving this character (this character may be invalid)
-#define BV_SCIF_UART_RX_OVERFLOW                     0x0400
-/// RX character flag: Break occurred when receiving this character
-#define BV_SCIF_UART_RX_BREAK                        0x0200
-/// RX character flag: Framing error occurred when receiving this character
-#define BV_SCIF_UART_RX_FRAMING_ERROR                0x0100
-
-/// UART ALERT event: RX FIFO at or above the specified threshold
-#define BV_SCIF_UART_ALERT_RX_FIFO_ABOVE_THR         0x0001
-/// UART ALERT event: RX byte timeout occurred
-#define BV_SCIF_UART_ALERT_RX_BYTE_TIMEOUT           0x0002
-/// UART ALERT event: Break or framing error occurred
-#define BV_SCIF_UART_ALERT_RX_BREAK_OR_FRAMING_ERROR 0x0004
-/// UART ALERT event: TX FIFO at or below the specified threshold
-#define BV_SCIF_UART_ALERT_TX_FIFO_BELOW_THR         0x0008
-
-
-// UART control functions
-void scifUartSetRxTimeout(uint16_t rxTimeout);
-void scifUartSetRxEnableReqIdleCount(uint16_t rxEnableReqIdleCount);
-void scifUartRxEnable(uint16_t rxEnable);
-void scifUartStopEmulator(void);
 void scifUartSetBaudRate(uint32_t baudRate);
 
-// UART RX FIFO access functions
-void scifUartSetRxFifoThr(uint16_t threshold);
-uint32_t scifUartGetRxFifoCount(void);
-uint16_t scifUartRxGetChar(void);
-void scifUartRxGetChars(char* pBuffer, uint32_t count);
-void scifUartRxGetCharsWithFlags(uint16_t* pBuffer, uint32_t count);
-
 // UART TX FIFO access functions
-void scifUartSetTxFifoThr(uint16_t threshold);
 uint32_t scifUartGetTxFifoCount(void);
+void scifUartTxPutTwoChars(char c1, char c2);
 void scifUartTxPutChar(char c);
-void scifUartTxPutCharDelayed(char c, uint8_t delay);
 void scifUartTxPutChars(char* pBuffer, uint32_t count);
-
-// UART event/interrupt functions
-uint16_t scifUartGetEvents(void);
-void scifUartClearEvents(void);
-void scifUartSetEventMask(uint16_t mask);
 
 
 #endif
 //@}
 
 
-// Generated by DESKTOP-DACKC3I at 2017-02-12 11:13:36.578
+// Generated by DESKTOP-DACKC3I at 2017-02-12 11:31:56.126

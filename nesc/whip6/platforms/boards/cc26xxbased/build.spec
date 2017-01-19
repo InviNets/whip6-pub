@@ -4,7 +4,7 @@
 # Copyright (c) 2012-2016 InviNets Sp z o.o.
 # All rights reserved.
 #
-# This file is distributed under the terms in the attached LICENSE     
+# This file is distributed under the terms in the attached LICENSE
 # files. If you do not find these files, copies can be found by writing
 # to technology@invinets.com.
 #
@@ -56,6 +56,7 @@ dependencies:
   - platforms/tools/programmer/ccbsl
   - platforms/tools/programmer/whipprog
   - platforms/tools/programmer/mesh
+  - platforms/tools/programmer/heni-bl
   - platforms/tools/debugger/ti-checkjtag
   - platforms/tools/debugger/ti-gdbserver
   - platforms/boards/cc26xxbased/private
@@ -82,6 +83,11 @@ composite targets:
   whipinstall:
     - build
     - progwhip
+  henireinstall:
+    - progheni-bl
+  heniinstall:
+    - build
+    - progheni-bl
   build:
     - clean
     - create_build_dir

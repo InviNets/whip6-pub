@@ -1,0 +1,2 @@
+direct targets:
+  - progheni-bl

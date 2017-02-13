@@ -1,0 +1,39 @@
+This application serves the purpose of verifing whether uart is able to read a single byte asynchronously.
+
+Every three seconds the application makes a call to start reading. Immediately afterwards it toggles a value of a local character variable. As soon as the user provides the input, the application compares the received byte with the local variable.
+
+*************
+How to use it
+*************
+1. Install the application.
+2. Start minicom (make sure you have connected minicom correctly to the device).
+3. Reset the board.
+4. If the *yellow* led is on, enter a single 'a' character in the minicom terminal; observe the *orange* led and the *green* one.
+5. Otherwise, if the *yellow* led is off, enter 'b' in the minicom terminal; observe the *orange* led and the *green* one.
+6. Then, try entering multiple characters at once; observe the *orange* led.
+7. Wait for a half of minute and enter multiple characters at once; observe the *orange* led.
+
+****************
+Expected outcome
+****************
+Ad 4., 5.:
+- Every time a user enters the proper character, the *orange* led and the *green* led toggle. If the character does not match the local value, only the *orange* led toggles.
+Ad 6.:
+- The *orange* led should toggle once no matter how many characters are entered during a three-second interval between consecutive calls to uart.
+Ad 7.
+- The *orange* led should toggle once despite the fact that the application made more than one call to uart during a half-minute interval.
+- The *red* led should be on to designate that the uart is busy (it keeps waiting for input after the first call).
+
+**********************
+How to diagnose errors
+**********************
+Ad 4., 5.:
+- The *red* led is on and the *orange* led stop toggling after a single character is entered: make sure the interrupt UART_INT_RX is handled properly in the implementation of AsyncRead.
+- The *red* led is off and the *orange* led does not toggle after characters are entered: make sure the event "readDone" is signalled by the implementation of AsyncRead.
+- The *orange* led toggles but the *green* led does not: uart received a different character than expected.
+Ad 6.:
+- The *orange* led toggles multiple times: the implementation of AsyncRead reads more than one byte after a single call.
+Ad 7.:
+- The *orange* led toggles multiple times and the *red* led is on: AsyncRead reads more than one byte after a single call.
+- The *orange* led toggles multiple times and the *red* led is off: the implementation of AsyncRead "hoards" calls to uart.
+- The *yellow* led toggled only once: most probably, AsyncRead is blocking.

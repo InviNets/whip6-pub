@@ -18,13 +18,14 @@
  */
 
 #include <stdbool.h>
+#include "Assert.h"
 #include "SleepLevels.h"
 
 generic module HalUARTAsyncWritePrv(uint32_t uartBase) {
     provides interface AsyncWrite<uint8_t>;
 
-    uses interface ExternalEvent as Interrupt;
-    uses interface AskBeforeSleep;
+    uses interface ExternalEvent as Interrupt @exactlyonce();
+    uses interface AskBeforeSleep @exactlyonce();
 }
 
 implementation {
@@ -64,4 +65,6 @@ implementation {
             signal AsyncWrite.writeDone(SUCCESS);
         }
     }
+
+    default async event void AsyncWrite.writeDone(error_t result) { }
 }

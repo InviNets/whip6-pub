@@ -15,11 +15,18 @@
 #endif
 
 configuration BlockingUART0Pub {
+    provides interface BlockingRead<uint8_t>;
+    provides interface ReadNow<uint8_t>;
     provides interface BlockingWrite<uint8_t>;
+    provides interface AsyncWrite<uint8_t>;
 }
+
 implementation {
     components new HalBlockingUART0Pub(PLATFORM_UART_BAUD_RATE);
+    BlockingRead = HalBlockingUART0Pub;
+    ReadNow = HalBlockingUART0Pub;
     BlockingWrite = HalBlockingUART0Pub;
+    AsyncWrite = HalBlockingUART0Pub;
 
     components BoardStartupPub;
     BoardStartupPub.InitSequence[0] -> HalBlockingUART0Pub.Init;

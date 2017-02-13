@@ -28,7 +28,9 @@ generic configuration HalBlockingUART0Pub(
     {
         interface Init @exactlyonce();
         interface BlockingRead<uint8_t>;
+        interface ReadNow<uint8_t>;
         interface BlockingWrite<uint8_t>;
+        interface AsyncWrite<uint8_t>;
     }
 }
 implementation {
@@ -39,7 +41,9 @@ implementation {
 
     Init = GenericUartPrv.Init;
     BlockingRead = GenericUartPrv.BlockingRead;
+    ReadNow = GenericUartPrv.ReadNow;
     BlockingWrite = GenericUartPrv.BlockingWrite;
+    AsyncWrite = GenericUartPrv.AsyncWrite;
 
     GenericUartPrv.Interrupt -> Ints.UART0Interrupt;
     GenericUartPrv.PowerDomain -> PowerDomains.SerialDomain;

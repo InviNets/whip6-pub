@@ -28,8 +28,11 @@ generic configuration HalBlockingUARTXPrv(
     {
         interface Init @exactlyonce();
         interface BlockingRead<uint8_t>;
+        interface ReadNow<uint8_t>;
         interface BlockingWrite<uint8_t>;
+        interface AsyncWrite<uint8_t>;
     }
+
     uses
     {
         interface CC26xxPin as RXPin;
@@ -45,7 +48,9 @@ implementation
     components new HalConfigureUARTPrv(uartBase, baud, FALSE) as CfgPrv;
 
     components new HalUARTBlockingReadPrv(uartBase) as UARTReadPrv;
+    components new HalUARTReadNowPrv(uartBase) as UARTReadNowPrv;
     components new HalUARTBlockingWritePrv(uartBase) as UARTWritePrv;
+    components new HalUARTAsyncWritePrv(uartBase) as UARTAsyncWritePrv;
 
     CfgPrv.PowerDomain = PowerDomain;
     CfgPrv.RXPin = RXPin;
@@ -56,11 +61,17 @@ implementation
     CfgPrv.ReInitRegisters <- HalCC26xxSleepPub.AtomicAfterDeepSleepInit;
 
     components new HalAskBeforeSleepPub();
+    UARTReadNowPrv.AskBeforeSleep -> HalAskBeforeSleepPub;
     UARTWritePrv.AskBeforeSleep -> HalAskBeforeSleepPub;
+    UARTAsyncWritePrv.AskBeforeSleep -> HalAskBeforeSleepPub;
 
     Init = CfgPrv.Init;
     BlockingRead = UARTReadPrv;
+    ReadNow = UARTReadNowPrv;
     BlockingWrite = UARTWritePrv;
+    AsyncWrite = UARTAsyncWritePrv;
 
+    Interrupt = UARTReadNowPrv.Interrupt;
     Interrupt = UARTWritePrv.Interrupt;
+    Interrupt = UARTAsyncWritePrv.Interrupt;
 }

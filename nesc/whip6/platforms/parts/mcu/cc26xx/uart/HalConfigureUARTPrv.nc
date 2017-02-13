@@ -53,6 +53,7 @@ implementation {
     command error_t ReInitRegisters.init() {
         UARTConfigSetExpClk(uartBase, SysCtrlClockGet(), baud,
                 UART_CONFIG_WLEN_8 | UART_CONFIG_PAR_NONE | UART_CONFIG_STOP_ONE);
+        UARTEnable(uartBase);
         if (enableFIFO) {
             UARTFIFOEnable(uartBase);
         } else {
@@ -60,7 +61,6 @@ implementation {
         }
         call Interrupt.clearPending();
         call Interrupt.asyncNotifications(TRUE);
-        UARTEnable(uartBase);
         return SUCCESS;
     }
 

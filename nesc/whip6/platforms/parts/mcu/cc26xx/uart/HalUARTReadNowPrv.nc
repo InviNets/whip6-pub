@@ -18,13 +18,14 @@
  */
 
 #include "uart.h"
+#include "Assert.h"
 #include "SleepLevels.h"
 
 generic module HalUARTReadNowPrv(uint32_t uartBase) {
     provides interface ReadNow<uint8_t>;
 
-    uses interface ExternalEvent as Interrupt;
-    uses interface AskBeforeSleep;
+    uses interface ExternalEvent as Interrupt @exactlyonce();
+    uses interface AskBeforeSleep @exactlyonce();
 }
 
 implementation {
@@ -60,6 +61,7 @@ implementation {
             atomic busy = FALSE;
             signal ReadNow.readDone(SUCCESS, (uint8_t)value);
         }
-
     }
+
+    default async event void ReadNow.readDone(error_t result, uint8_t val) { }
 }

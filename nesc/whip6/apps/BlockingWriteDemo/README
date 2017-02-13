@@ -1,0 +1,19 @@
+This application serves the purpose of verifing whether uart is able to write a single byte in the blocking manner.
+It is a one-shot application which runs in two phases.
+
+In the first phase (when the *yellow* led is on) uart writes consecutive alphabet characters, from 'a' to 'z', one by one, each byte in a separate timer-callback function.
+In the second phase (when the *orange* led is on), alphabet characters (from 'a' to 'z') are written within a loop, each byte in a separate iteration.
+
+*************
+How to use it
+*************
+1. Install the application.
+2. Start minicom (make sure you have connected minicom correctly to the device).
+3. Reset the board and observe both: the output printed in the minicom terminal and leds.
+
+****************
+Expected outcome
+****************
+Ad 3.
+- Minicom prints a sequence of alphabet characters (from 'a' to 'z') twice.
+- In the end, all leds are off.

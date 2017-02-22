@@ -36,7 +36,7 @@ $(TARGET).nobl.elf: $(OBJS)
 	@if [ -d "$(ALT_PROJECT_ROOT)" ]; then \
 		printf "/`git -C "$(ALT_PROJECT_ROOT)" rev-parse --short HEAD``[ -z "$$(git -C "$(ALT_PROJECT_ROOT)" status --porcelain)" ] || echo +`" >> $(TARGET).version.bin; \
 	fi
-	@printf " `LC_ALL=C date +%Y%m%d%H%M%S`/`hostname`\0" >> $(TARGET).version.bin
+	@printf " `LC_ALL=C date +%Y%m%d%H%M%S`/`hostname` $(BOARD_NAME)\0" >> $(TARGET).version.bin
 	@echo
 	@echo "Version string:"
 	@printf "   "

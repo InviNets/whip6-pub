@@ -4,7 +4,7 @@
 # Copyright (c) 2012-2016 InviNets Sp z o.o.
 # All rights reserved.
 #
-# This file is distributed under the terms in the attached LICENSE     
+# This file is distributed under the terms in the attached LICENSE
 # files. If you do not find these files, copies can be found by writing
 # to technology@invinets.com.
 #
@@ -52,6 +52,7 @@ class MakeBuildRun(BuildStep):
     if not makefile:
         raise RuntimeError('no "%s" specified' % (MAKEFILE,))
     print >>f, 'APP_NAME :=', app_name
+    print >>f, 'BOARD_NAME :=', self.board
     print >>f, 'PROJECT_ROOT :=', self.project_root
     print >>f, 'ALT_PROJECT_ROOT :=', self.alt_project_root
     print >>f, 'BUILD_DIR :=', self.build_dir

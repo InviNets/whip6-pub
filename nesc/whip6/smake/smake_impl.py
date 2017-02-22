@@ -4,7 +4,7 @@
 # Copyright (c) 2012-2016 InviNets Sp z o.o.
 # All rights reserved.
 #
-# This file is distributed under the terms in the attached LICENSE     
+# This file is distributed under the terms in the attached LICENSE
 # files. If you do not find these files, copies can be found by writing
 # to technology@invinets.com.
 #
@@ -115,7 +115,7 @@ class SMake(object):
     if not args.board:
       self._show_boards_and_quit('No board selected')
 
-    board = args.board
+    self.board = board = args.board
     self.constants_in_conf[BOARD_VAR] = board
 
     if args.board not in available_board_names and not args.force:

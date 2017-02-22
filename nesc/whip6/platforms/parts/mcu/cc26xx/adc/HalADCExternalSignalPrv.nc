@@ -16,18 +16,17 @@
  * @author Szymon Acedanski
  */
 
-#include "adc.h"
+#include <driverlib/aux_adc.h>
 #include "DimensionTypes.h"
-#include "hal_adc_resource.h"
 
 generic module HalADCExternalSignalPrv() {
     provides interface DimensionalRead<TMilliVolt, int16_t> as Read;
     uses interface DimensionalRead<TMilliVolt, int16_t> as SubRead[uint8_t port];
-    uses interface CC26xxAUXPin as Pin;
+    uses interface CC26xxAUXPin as AUXPin;
 }
 implementation {
     command error_t Read.read() {        
-        uint8_t num = call Pin.getAuxIONumber();
+        uint8_t num = call AUXPin.AUXIOId();
         if (num >= 8) {
             panic("AUXIO>=8 is not analog");
         }

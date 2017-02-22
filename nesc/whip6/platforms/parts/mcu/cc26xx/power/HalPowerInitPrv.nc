@@ -77,6 +77,10 @@ implementation
         // powered, except sleep. This is what TI-RTOS does too, BTW.
         OSCInterfaceEnable();
 
+        // We also keep the control clocks always on for simplicity.
+        AUXWUCClockEnable(AUX_WUC_ADI_CLOCK);
+        AUXWUCClockEnable(AUX_WUC_ANAIF_CLOCK);
+
         // For simplicity, we may have XOSC_HF running at all times, except
         // sleep. We don't know how much extra power it actually draws.
         //

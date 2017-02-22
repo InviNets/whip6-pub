@@ -43,25 +43,29 @@ implementation {
         int32_t adjusted;
         readingPortNr = IDLE;
 
-        // TODO(accek): assert that AUX domain is powered and clocked
+        // We assume that the AUX domain is powered up and the
+        // ANAIF clock is enabled whenever the MCU is not sleeping.
+        // This is ensured in the sleep routine in HalCC26xxSleepPub.nc
+        // and in the power initialization code in HalPowerInitPrv.nc.
 
-        // TODO(accek): and even if it is, I'm pretty sure the ADC clock must be
-        // switched on separately.
-
+        AUXADCDisable();
         AUXADCEnableSync(AUXADC_REF_FIXED, AUXADC_SAMPLE_TIME_170_US,
                 AUXADC_TRIGGER_MANUAL);
         AUXADCSelectInput(port);
+        AUXADCFlushFifo();
         AUXADCGenManualTrigger();
         raw = AUXADCReadFifo();
+        AUXADCDisable();
+
         adjusted = AUXADCAdjustValueForGainAndOffset(raw,
                 AUXADCGetAdjustmentGain(AUXADC_REF_FIXED),
                 AUXADCGetAdjustmentOffset(AUXADC_REF_FIXED));
         value = AUXADCValueToMicrovolts(
                     AUXADC_FIXED_REF_VOLTAGE_NORMAL, adjusted) / 1000;
-	     signal ReadSource.readDone[userId, port](SUCCESS, value);
+        signal ReadSource.readDone[userId, port](SUCCESS, value);
     }
 
-    command error_t ReadSource.read[uint8_t userId, uint8_t port]() {        
+    command error_t ReadSource.read[uint8_t userId, uint8_t port]() {
         if(userId != call ArbiterInfo.userId()) {
             return EBUSY;
         }

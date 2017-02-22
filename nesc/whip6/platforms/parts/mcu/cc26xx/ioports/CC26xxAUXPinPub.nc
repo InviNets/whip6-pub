@@ -56,7 +56,7 @@ implementation {
         return table[call CC26xxPin.IOId()];
     }
 
-    command inline uint32_t CC26xxAUXPin.AUXIOId() {
+    async command inline uint32_t CC26xxAUXPin.AUXIOId() {
         static int AUXId = -1;
         if (AUXId == -1) {
             AUXId = IOId2AUXId();

@@ -16,19 +16,19 @@
  * @author Szymon Acedanski
  */
 
-#include "adc.h"
+#include <driverlib/aux_adc.h>
 #include "DimensionTypes.h"
 #include "hal_adc_resource.h"
 
 generic configuration HalADCExternalSignalPub() {
     provides interface DimensionalRead<TMilliVolt, int16_t>;
-    uses interface CC2538Pin as Pin;
+    uses interface CC26xxPin as Pin;
 }
 implementation {
-    enum { 
+    enum {
         USER_ID = unique(HAL_ADC_RESOURCE),
     };
-    
+
     components HalADCSingleReadArbPrv as SubADC;
     components new HalADCSingleReadAutoArbPrv() as ADC;
 
@@ -36,8 +36,11 @@ implementation {
     ADC.Resource -> SubADC.Resource[USER_ID];
     ADC.SubRead -> SubADC.ReadSource;
 
-    components new HalADCExternalSignalPrv(USER_ID) as Impl;
+    components new CC26xxAUXPinPub() as AUXPin;
+    Pin = AUXPin.CC26xxPin;
+
+    components new HalADCExternalSignalPrv() as Impl;
     Impl.SubRead -> ADC.ReadSource;
-    Impl.Pin -> Pin;
+    Impl.AUXPin -> AUXPin.CC26xxAUXPin;
     DimensionalRead = Impl.Read;
 }

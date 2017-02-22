@@ -4,6 +4,9 @@
  * Copyright (c) 2012-2016 InviNets Sp z o.o.
  * All rights reserved.
  *
+ * Copyright (c) 2017 University of Warsaw
+ * All rights reserved.
+ *
  * This file is distributed under the terms in the attached LICENSE     
  * files. If you do not find these files, copies can be found by writing
  * to technology@invinets.com.
@@ -25,9 +28,9 @@ implementation {
     // -- no putchar
     components DummyPutcharProviderPub;
 #else
-    // -- putchar over UART0
-    components BlockingWritePutcharProviderPub;
-    components BlockingUART0Pub;
-    BlockingWritePutcharProviderPub.BlockingWrite -> BlockingUART0Pub;
+    // -- putchar over Sensor Controller UART
+    components NonBlockingWritePutcharProviderPub;
+    components NonBlockingSCUARTPub;
+    NonBlockingWritePutcharProviderPub.NonBlockingWrite -> NonBlockingSCUARTPub;
 #endif
 }

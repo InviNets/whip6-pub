@@ -15,6 +15,7 @@ board: cherry-v1
 
 dependencies:
   - platforms/boards/cc26xxbased
+  - platforms/boards/cc26xxbased/cherry-v1/scif_uart
   - lib/io/leds
   - lib/io/buttons
 

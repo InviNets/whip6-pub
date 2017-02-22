@@ -22,7 +22,7 @@
 
 generic configuration HalADCExternalSignalPub() {
     provides interface DimensionalRead<TMilliVolt, int16_t>;
-    uses interface CC26xxPin as Pin;
+    uses interface CC26xxAUXPin as AUXPin;
 }
 implementation {
     enum {
@@ -36,11 +36,8 @@ implementation {
     ADC.Resource -> SubADC.Resource[USER_ID];
     ADC.SubRead -> SubADC.ReadSource;
 
-    components new CC26xxAUXPinPub() as AUXPin;
-    Pin = AUXPin.CC26xxPin;
-
     components new HalADCExternalSignalPrv() as Impl;
     Impl.SubRead -> ADC.ReadSource;
-    Impl.AUXPin -> AUXPin.CC26xxAUXPin;
+    AUXPin = Impl.AUXPin;
     DimensionalRead = Impl.Read;
 }

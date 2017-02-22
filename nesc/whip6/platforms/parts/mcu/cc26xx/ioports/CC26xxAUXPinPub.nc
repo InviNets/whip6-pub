@@ -33,7 +33,7 @@ static const uint8_t mapping4x4[32] = {
 };
 
 generic module CC26xxAUXPinPub() {
-    provides interface CC26xxAUXPin @atmostonce();
+    provides interface CC26xxAUXPin;
     uses interface CC26xxPin @exactlyonce();
 }
 

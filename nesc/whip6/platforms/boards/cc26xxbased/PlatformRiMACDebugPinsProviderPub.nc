@@ -12,7 +12,7 @@
 /**
  * @author Szymon Acedanski <accek@mimuw.edu.pl>
  * 
- * Debug pins for RiMAC.
+ * Debug pins for RiMAC (stub).
  */
 
 configuration PlatformRiMACDebugPinsProviderPub {

@@ -3,7 +3,7 @@ This simple app uses Sensor Controller UART to send test data according to these
 - NUM_OF_LINES lines are sent through the SC UART
 - each lines starts with "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ "
 - the last character of the line cycles from '!' (ASCII 33) to '@' (ASCII 64)
-- that gives blocks of size 59 * 32 = 1888 that allow discovery of loss of consecutive bytes
+- that gives blocks of size 55 * 32 = 1760 that allow discovery of loss of consecutive bytes
   (if not happening too often or is longer than block size)
 
 Baud rate is configurable by BAUD_RATE variable in Prv module.

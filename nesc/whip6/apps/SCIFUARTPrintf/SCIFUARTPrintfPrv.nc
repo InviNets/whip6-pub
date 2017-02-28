@@ -14,13 +14,13 @@ module SCIFUARTPrintfPrv {
     uses interface Timer<TMilli, uint32_t>;
 } implementation {
     event void Boot.booted() {
-        call Timer.startWithTimeoutFromNow(2048);
+        call Timer.startWithTimeoutFromNow(2048); // ms
     }
 
     event void Timer.fired() {
         int i;
         for (i = 0; i < 30; i++)
             printf("Test printa troche dluzszego z liczbami %d %d\n", i, i);
-        call Timer.startWithTimeoutFromNow(2048);
+        call Timer.startWithTimeoutFromNow(2048); // ms
     }
 }

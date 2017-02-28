@@ -28,7 +28,7 @@ implementation {
     event void Boot.booted() {
         size = strlen(test_msg);
         call SCOnOff.on();
-        call Timer.startWithTimeoutFromNow(2048);
+        call Timer.startWithTimeoutFromNow(2048); // ms
     }
 
     event void Timer.fired() {

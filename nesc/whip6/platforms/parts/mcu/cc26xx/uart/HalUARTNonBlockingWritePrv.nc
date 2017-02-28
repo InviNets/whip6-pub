@@ -15,14 +15,14 @@ module HalUARTNonBlockingWritePrv {
 } implementation {
     uint32_t m_lost_bytes = 0;
     char m_last_char = 0;;
-    char m_buffer[16];
+    char m_buffer[20]; // buffer to contain the message about lost bytes
 
     async command error_t NonBlockingWrite.write(uint8_t value) {
+        // Each cell has space for two bytes
         uint32_t free = 2 * (SCIF_UART_TX_FIFO_MAX_COUNT - scifUartGetTxFifoCount());
         if (m_lost_bytes > 0) {
             uint32_t needed;
-            sprintf(m_buffer, "\nLOST:%d\n%c", m_lost_bytes, value);
-            needed = strlen(m_buffer);
+            needed = sprintf(m_buffer, "\nLOST:%d\n%c", m_lost_bytes, value);
             if (free >= needed) {
                 scifUartTxPutChars(m_buffer, needed);
                 m_lost_bytes = 0;

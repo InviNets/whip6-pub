@@ -22,7 +22,8 @@ module HalUARTNonBlockingWritePrv {
         uint32_t free = 2 * (SCIF_UART_TX_FIFO_MAX_COUNT - scifUartGetTxFifoCount());
         if (m_lost_bytes > 0) {
             uint32_t needed;
-            needed = sprintf(m_buffer, "\nLOST:%d\n%c", m_lost_bytes, value);
+            sprintf(m_buffer, "\nLOST:%d\n%c", m_lost_bytes, value);
+            needed = strlen(m_buffer);
             if (free >= needed) {
                 scifUartTxPutChars(m_buffer, needed);
                 m_lost_bytes = 0;

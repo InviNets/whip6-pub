@@ -10,11 +10,32 @@ LIBRARIES += -lm
 ### Don't treat the .elf as intermediate
 .PRECIOUS: %.elf %.hex %.bin
 
+### These are not real files to be produced
+.PHONY: .release-images
+
 ### Compilation rules
 
 all: $(TARGET).hex $(TARGET).nobl.dfu.bin $(TARGET).nobl.lst \
 	$(TARGET).nobl.sym $(TARGET).nobl.flash.sizes $(TARGET).nobl.ram.sizes \
-	$(TARGET).workingcopy.hex
+	$(TARGET).workingcopy.hex .release-images
+
+.release-images: $(TARGET).nobl.dfu.bin $(TARGET).hex
+	@printf "$(APP_NAME)-`LC_ALL=C date +%Y%m%d`-" >> $(TARGET).release-version.txt
+	@printf "`git -C "$(PROJECT_ROOT)" rev-parse --short HEAD`" >> $(TARGET).release-version.txt
+	@if [ -d "$(ALT_PROJECT_ROOT)" ]; then \
+		printf -- "-`git -C "$(ALT_PROJECT_ROOT)" rev-parse --short HEAD`" >> $(TARGET).release-version.txt; \
+	fi
+	@printf -- "-$(BOARD_NAME)" >> $(TARGET).release-version.txt
+	@if [ -n "$$(git -C "$(PROJECT_ROOT)" status --porcelain)" -o \
+	      -z "$$(git -C "$(PROJECT_ROOT)" branch -r --contains HEAD)" -o \
+		  \( -d "$(ALT_PROJECT_ROOT)" -a \( \
+			 -n "$$(git -C "$(ALT_PROJECT_ROOT)" status --porcelain)" -o \
+			 -z "$$(git -C "$(ALT_PROJECT_ROOT)" branch -r --contains HEAD)" \
+	      \) \) ]; then \
+		printf -- "-dirty" >> $(TARGET).release-version.txt; \
+	fi
+	cp $(TARGET).nobl.dfu.bin "$$(cat $(TARGET).release-version.txt).dfu.bin"
+	cp $(TARGET).hex "$$(cat $(TARGET).release-version.txt).hex"
 
 $(TARGET).workingcopy.hex: $(TARGET).hex
 	ln -s $< $@

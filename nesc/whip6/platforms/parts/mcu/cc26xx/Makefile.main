@@ -62,9 +62,9 @@ $(TARGET).nobl.elf: $(OBJS)
 	$(OBJCOPY) $(OBJCOPY_FLAGS) -R .ccfg $< $@
 
 %.dfu.bin: %.bin
-	if [ -x "$(PROJECT_ROOT)/platforms/parts/mcu/cc26xx/native/bootloader/scripts/bin2dfu.py" ]; then \
-		$(PROJECT_ROOT)/platforms/parts/mcu/cc26xx/native/bootloader/scripts/bin2dfu.py \
-			-k $(PROJECT_ROOT)/platforms/parts/mcu/cc26xx/native/bootloader/key.bin \
+	if [ -n "$(ALT_PROJECT_ROOT)" -a -x "$(ALT_PROJECT_ROOT)/platforms/parts/mcu/cc26xx/native/bootloader/scripts/bin2dfu.py" ]; then \
+		$(ALT_PROJECT_ROOT)/platforms/parts/mcu/cc26xx/native/bootloader/scripts/bin2dfu.py \
+			-k $(ALT_PROJECT_ROOT)/platforms/parts/mcu/cc26xx/native/bootloader/key.bin \
 			-i $< -o $@; \
 	fi
 

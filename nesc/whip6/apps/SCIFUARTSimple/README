@@ -1,6 +1,6 @@
 This simple app uses Sensor Controller UART to send test data according to these rules:
 
-- NUM_OF_LINES lines are sent through the SC UART
+- DATA_TO_SEND megabytes (10^6 bytes) are sent through the SC UART
 - each lines starts with a control number that cycles from '0' to '9' followed by a space
 - then a string "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ " is sent
 - the last character of the line cycles from '!' (ASCII 33) to '@' (ASCII 64)

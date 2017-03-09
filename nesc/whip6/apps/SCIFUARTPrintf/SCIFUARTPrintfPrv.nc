@@ -19,7 +19,7 @@ module SCIFUARTPrintfPrv {
 
     event void Timer.fired() {
         int i;
-        for (i = 0; i < 30; i++)
+        for (i = 0; i < 1000; i++)
             printf("Test printa troche dluzszego z liczbami %d %d\n", i, i);
         call Timer.startWithTimeoutFromNow(2048); // ms
     }

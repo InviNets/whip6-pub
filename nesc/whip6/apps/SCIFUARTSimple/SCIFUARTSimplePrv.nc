@@ -22,7 +22,7 @@ implementation {
     uint32_t NUM_OF_LINES = 100000;
     uint32_t BAUD_RATE = 115200;
 
-    char test_msg[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ ";
+    char test_msg[] = " abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ ";
     uint32_t size;
 
     event void Boot.booted() {
@@ -36,6 +36,9 @@ implementation {
         scifUartSetBaudRate(BAUD_RATE);
 
         for (i = 0; i < NUM_OF_LINES; i++) {
+            while (scifUartGetTxFifoCount() >= SCIF_UART_TX_FIFO_MAX_COUNT);
+            scifUartTxPutChar((i % 10) + (int) '0');
+
             for (j = 0; j < size; j++) {
                 while (scifUartGetTxFifoCount() >= SCIF_UART_TX_FIFO_MAX_COUNT);
                 scifUartTxPutChar(test_msg[j]);

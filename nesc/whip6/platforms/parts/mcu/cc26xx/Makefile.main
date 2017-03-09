@@ -28,13 +28,13 @@ all: $(TARGET).hex $(TARGET).nobl.dfu.bin $(TARGET).nobl.lst \
 	@printf -- "-$(BOARD_NAME)" >> $(TARGET).release-version.txt
 	@if [ -n "$$(git -C "$(PROJECT_ROOT)" status --porcelain)" -o \
 	      -z "$$(git -C "$(PROJECT_ROOT)" branch -r --contains HEAD)" -o \
-		  \( -d "$(ALT_PROJECT_ROOT)" -a \( \
-			 -n "$$(git -C "$(ALT_PROJECT_ROOT)" status --porcelain)" -o \
-			 -z "$$(git -C "$(ALT_PROJECT_ROOT)" branch -r --contains HEAD)" \
-	      \) \) ]; then \
+		  -n "$$([ -d "$(ALT_PROJECT_ROOT)" ] && git -C "$(ALT_PROJECT_ROOT)" status --porcelain)" -o \
+		  -z "$$([ -d "$(ALT_PROJECT_ROOT)" ] && git -C "$(ALT_PROJECT_ROOT)" branch -r --contains HEAD || echo "ok")" ]; then \
 		printf -- "-dirty" >> $(TARGET).release-version.txt; \
 	fi
-	cp $(TARGET).nobl.dfu.bin "$$(cat $(TARGET).release-version.txt).dfu.bin"
+	if [ -f "$(TARGET).nobl.dfu.bin" ]; then \
+		cp $(TARGET).nobl.dfu.bin "$$(cat $(TARGET).release-version.txt).dfu.bin"; \
+	fi
 	cp $(TARGET).hex "$$(cat $(TARGET).release-version.txt).hex"
 
 $(TARGET).workingcopy.hex: $(TARGET).hex

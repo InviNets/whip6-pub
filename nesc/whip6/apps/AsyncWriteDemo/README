@@ -1,0 +1,28 @@
+This application serves the purpose of verifing whether uart is able to write a single byte asynchronously.
+It is a one-shot application which runs in two phases.
+
+In the first phase uart writes consecutive alphabet characters, from 'a' to 'z', one by one, each byte in a separate timer-callback function.
+In the second phase, alphabet characters (from 'a' to 'z') are written within a loop, each byte in a separate iteration.
+
+*************
+How to use it
+*************
+1. Install the application.
+2. Start minicom (make sure you have connected minicom correctly to the device).
+3. Reset the board and observe both: the output printed in the minicom terminal and leds.
+
+****************
+Expected outcome
+****************
+Ad 3.
+- Minicom prints a sequence of alphabet characters (from 'a' to 'z') twice.
+- The *yellow* led and the *green* led are on.
+
+**********************
+How to diagnose errors
+**********************
+- If the *orange* led is on: uart failed to write at least one character during the first phase of the program because it was "busy". Try to increase the interval for the Timer1 (default: 32 ms). If the problem persists then, most probably, it is related to triggering interrupt 'UART_INT_TX'.
+- If the *red* led is on: uart failed to write at least one character properly (as for now there is no validation and the signal always comes with "SUCCESS" argument).
+- Only a single character ('a') is printed and the *orange* led is off - there is a problem with signalling the event "writeDone".
+- The *yellow* led is on, and the *green* one is off - AsyncWrite cannot handle sending bytes one by one without significant time intervals between consecutive instructions.
+- The *orange* led and the *red* led are off, the *yellow* led and the *green* one are on, but some characters are missing - AsyncWrite or uart does not work as expected.

@@ -1,0 +1,29 @@
+This application serves the purpose of verifing whether uart is able to read a single byte in the blocking manner.
+
+Two seconds after powering the board the application makes a call to start reading. When the device awaits a character to be entered by a user, the *yellow* led is on. When the application receives an input byte from a user, the character is compared with 'y'. After two seconds the application makes another call to read and the process is repeated.
+
+*************
+How to use it
+*************
+1. Install the application.
+2. Start minicom (make sure you have connected minicom correctly to the device).
+3. Reset the board.
+4. When the *yellow* led is on, enter 'y' once; observe the *green* led and the *orange* led.
+5. When the *yellow* led is on, enter many characters at once; observe the *green* led and the *orange* led.
+6. When the *yellow* led is on, enter a character other than 'y'; observe the *orange* led.
+7. Enter 'y' when the *yellow* led is off; then, when the *yellow* led is on, enter 'z'; observe the leds.
+8. After the *yellow* led turns on do not enter any characters for 30 seconds; observe the leds.
+
+****************
+Expected outcome
+****************
+Ad 4.:
+- The *green* led toggles.
+Ad 5.:
+- The *green* or *orange* led toggle - depending on the first character of the entered sequence.
+Ad 6.:
+- The *orange* led toggles.
+Ad 7.:
+- The *orange* led toggles.
+Ad 8.
+- No led changes its state.

@@ -8,7 +8,7 @@
  * files.
  */
 #ifndef SC_UART_BAUD_RATE
-#define SC_UART_BAUD_RATE 115200
+#define SC_UART_BAUD_RATE 230400
 #endif
 
 configuration NonBlockingSCUARTPub {

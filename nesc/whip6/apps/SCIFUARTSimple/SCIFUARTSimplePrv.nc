@@ -19,8 +19,8 @@ module SCIFUARTSimplePrv {
 }
 
 implementation {
-    uint32_t DATA_TO_SEND = 1; // MB = 10^6 bytes
-    uint32_t BAUD_RATE = 115200;
+    uint32_t DATA_TO_SEND = 5; // MB = 10^6 bytes
+    uint32_t BAUD_RATE = 230400;
 
     uint32_t bytes_to_send;
     char test_msg[] = " abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ ";

@@ -10,22 +10,25 @@
 #include <stdio.h>
 #include "scif_uart_emulator.h"
 
+#define LOST_BUFFER_SIZE 20
+
 module HalUARTNonBlockingWritePrv {
     provides interface NonBlockingWrite<uint8_t>;
 } implementation {
-    uint32_t m_free_threshold = 2 * SCIF_UART_TX_FIFO_MAX_COUNT / 4;
+    const uint32_t SC_UART_FREE_THRESHOLD = 2 * SCIF_UART_TX_FIFO_MAX_COUNT / 4; // == 1/4
+
     uint32_t m_lost_bytes = 0;
-    char m_last_char = 0;;
-    char m_buffer[20]; // buffer to contain the message about lost bytes
+    char m_last_char = 0;
+    char m_buffer[LOST_BUFFER_SIZE]; // buffer to contain the message about lost bytes
 
     async command error_t NonBlockingWrite.write(uint8_t value) {
         // Each cell has space for two bytes
         uint32_t free = 2 * (SCIF_UART_TX_FIFO_MAX_COUNT - scifUartGetTxFifoCount());
         if (m_lost_bytes > 0) {
             uint32_t needed;
-            sprintf(m_buffer, "\nLOST:%d\n%c", m_lost_bytes, value);
+            snprintf(m_buffer, LOST_BUFFER_SIZE, "\nLOST:%d\n%c", m_lost_bytes, value);
             needed = strlen(m_buffer);
-            if (free >= needed && free >= m_free_threshold) {
+            if (free >= needed && free >= SC_UART_FREE_THRESHOLD) {
                 scifUartTxPutChars(m_buffer, needed);
                 m_lost_bytes = 0;
                 return SUCCESS;

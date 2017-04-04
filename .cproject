@@ -48,9 +48,6 @@
 	</storageModule>
 	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
 	<storageModule moduleId="refreshScope" versionNumber="2">
-		<configuration configurationName="PanicTest">
-			<resource resourceType="PROJECT" workspacePath="/whip6-pub"/>
-		</configuration>
 		<configuration configurationName="Blink">
 			<resource resourceType="PROJECT" workspacePath="/whip6-pub"/>
 		</configuration>

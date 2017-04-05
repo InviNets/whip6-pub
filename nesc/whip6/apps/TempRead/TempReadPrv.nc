@@ -5,14 +5,14 @@
  * Copyright (c) 2012-2017 Przemyslaw Horban
  * All rights reserved.
  *
- * This file is distributed under the terms in the attached LICENSE     
+ * This file is distributed under the terms in the attached LICENSE
  * files.
  */
 
 /**
- * @author Przemyslaw <extremegf@gmail.com>
+ * @author Przemyslaw Horban <extremegf@gmail.com>
  * @author Michal Marschall <m.marschall@invinets.com>
- * 
+ *
  * Reads temperature every second and prints to the console.
  */
 
@@ -20,25 +20,22 @@
 
 module TempReadPrv {
     uses interface Boot;
-    uses interface Led;
     uses interface Timer<TMilli, uint32_t>;
     uses interface DimensionalRead<TDeciCelsius, int16_t> as ReadTemp;
 }
 
 implementation {
     event void Boot.booted() {
-        call Led.off();
         call Timer.startWithTimeoutFromNow(1000);
     }
 
     event void Timer.fired() {
         error_t error;
 
-        call Timer.startWithTimeoutFromLastTrigger(1000);
-        call Led.on();
+        call Timer.startWithTimeoutFromLastTrigger(2000);
         error = call ReadTemp.read();
         if(error != SUCCESS) {
-            printf("Error in call to read: %u.\n", error);
+            printf("Error in call to read: %u\n\r", error);
         }
     }
 
@@ -48,6 +45,5 @@ implementation {
         } else {
             printf("Temperature in tenths of degree Celsius: %d\n\r", val);
         }
-        call Led.off();
     }
 }

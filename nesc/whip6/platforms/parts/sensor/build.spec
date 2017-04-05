@@ -1,0 +1,12 @@
+#
+# whip6: Warsaw High-performance IPv6.
+#
+# Copyright (c) 2017 Uniwersytet Warszawski
+# All rights reserved.
+#
+# This file is distributed under the terms in the attached LICENSE
+# files.
+#
+
+dependencies:
+ - platforms/parts/sensor/tmp431

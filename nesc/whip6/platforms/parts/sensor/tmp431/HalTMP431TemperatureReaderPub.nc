@@ -22,8 +22,8 @@
 generic configuration HalTMP431TemperatureReaderPub() {
     provides interface DimensionalRead<TDeciCelsius, int16_t> as ReadTemp;
 
-    uses interface OnOffSwitch;
     uses interface I2CPacket<TI2CBasicAddr>;
+    uses interface OnOffSwitch;
     uses interface Resource;
 }
 

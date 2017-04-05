@@ -17,9 +17,9 @@
 generic module HalTMP431TemperatureReaderPrv() {
     provides interface DimensionalRead<TDeciCelsius, int16_t> as ReadTemp;
 
+    uses interface I2CPacket<TI2CBasicAddr>;
     uses interface OnOffSwitch;
     uses interface Resource;
-    uses interface I2CPacket<TI2CBasicAddr>;
     uses interface Timer<TMilli, uint32_t> as EnableDelay;
     uses interface Timer<TMilli, uint32_t> as SettlingDelay;
 }
@@ -75,11 +75,12 @@ implementation {
             post returnResult();
         }
     }
-        
+
     event void Resource.granted() {
         /* shutdown device to perform one-shot conversion and set the extended range (-55 C to 150 C) */
         i2cBuf[0] = REG_CONFIG1_WRITE;
         i2cBuf[1] = CONFIG1_SD_MASK | CONFIG1_RANGE_MASK;
+        devAddress = DEV_ADDRESS1;
         result = call I2CPacket.write(I2C_START | I2C_STOP, devAddress, 2, i2cBuf);
         if(result != SUCCESS) {
             post returnResult();
@@ -91,12 +92,12 @@ implementation {
         result = call I2CPacket.write(I2C_START, devAddress, 1, i2cBuf);
         if(result != SUCCESS) {
             post returnResult();
-        }                                     
+        }
     }
 
     event void I2CPacket.writeDone(error_t error, uint16_t addr, uint8_t length, uint8_t_xdata *data) {
         result = error;
-        
+
         if(result != SUCCESS) {
             if(state == STATE_CONFIG && devAddress == DEV_ADDRESS1) {
                 /* Try again with a different address. We assume this error may only happen on the first command

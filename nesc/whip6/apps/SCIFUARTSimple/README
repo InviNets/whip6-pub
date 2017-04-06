@@ -1,0 +1,10 @@
+This simple app uses Sensor Controller UART to send test data according to these rules:
+
+- DATA_TO_SEND megabytes (10^6 bytes) are sent through the SC UART
+- each lines starts with a control number that cycles from '0' to '9' followed by a space
+- then a string "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ " is sent
+- the last character of the line cycles from '!' (ASCII 33) to '@' (ASCII 64)
+- that gives blocks of size 57 * 32 = 1824 that allow discovery of loss of consecutive bytes
+  (if not happening too often or is longer than block size)
+
+Baud rate is configurable by BAUD_RATE variable in Prv module.

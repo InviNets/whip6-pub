@@ -8,6 +8,7 @@
  * files. If you do not find these files, copies can be found by writing
  * to technology@invinets.com.
  */
+#include "aon_event.h"
 
 generic configuration HalSCIFPub() {
     provides interface SCIF;

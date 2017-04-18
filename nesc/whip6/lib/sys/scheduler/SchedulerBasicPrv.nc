@@ -33,19 +33,18 @@
  * All rights reserved.
  *
  * This file is distributed under the terms in the attached INTEL-LICENSE
- * file. If you do not find these files, copies can be found by writing to
+ * file. to
  * Intel Research Berkeley, 2150 Shattuck Avenue, Suite 1300, Berkeley, CA,
  * 94704.  Attention:  Intel License Inquiry.
  *
  *
  * whip6: Warsaw High-performance IPv6.
  *
- * Copyright (c) 2012-2016 InviNets Sp z o.o.
+ * Copyright (c) 2012-2017 Przemyslaw Horban
  * All rights reserved.
  *
  * This file is distributed under the terms in the attached LICENSE     
- * files. If you do not find these files, copies can be found by writing
- * to technology@invinets.com.
+ * files.
  */
  
 /**
@@ -213,4 +212,3 @@ implementation
         return SUCCESS;
     }
 }
-

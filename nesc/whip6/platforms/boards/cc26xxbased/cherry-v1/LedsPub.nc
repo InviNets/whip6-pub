@@ -1,15 +1,14 @@
 /*
  * whip6: Warsaw High-performance IPv6.
  *
- * Copyright (c) 2012-2016 InviNets Sp z o.o.
+ * Copyright (c) 2012-2017 Szymon Acedanski
  * All rights reserved.
  *
  * Copyright (c) 2017 Uniwersytet Warszawski
  * All rights reserved.
  *
  * This file is distributed under the terms in the attached LICENSE
- * files. If you do not find these files, copies can be found by writing
- * to technology@invinets.com.
+ * files.
  */
 
 #include <CC26xxPinConfig.h>

@@ -1,12 +1,11 @@
 /*
  * whip6: Warsaw High-performance IPv6.
  *
- * Copyright (c) 2012-2016 InviNets Sp z o.o.
+ * Copyright (c) 2012-2017 Przemyslaw Horban
  * All rights reserved.
  *
  * This file is distributed under the terms in the attached LICENSE     
- * files. If you do not find these files, copies can be found by writing
- * to technology@invinets.com.
+ * files.
  */
 
 #include <ieee154/ucIeee154AddressTypes.h>
@@ -15,7 +14,7 @@
 /**
  * A provider of an IEEE 802.15.4 address for the next hop.
  *
- * @author Przemysław Horban
+ * @author Przemyslaw Horban
  */
 interface LoWPANSimpleRoutingStrategy
 {
@@ -54,4 +53,3 @@ interface LoWPANSimpleRoutingStrategy
         error_t lastStatus,
         whip6_ieee154_addr_t  *llAddr);
 }
-

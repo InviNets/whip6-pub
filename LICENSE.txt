@@ -4,7 +4,7 @@ unless otherwise specified in particular source code files.
 ---
 
 Copyright (c) 2012-2017 InviNets Sp. z o.o., University of Warsaw,
-  Konrad Iwanicki, Przemyslaw Horban, Szymon Acedanski
+  Konrad Iwanicki, Przemyslaw Acedanski
   and individual contributors
 
 Redistribution and use in source and binary forms, with or without

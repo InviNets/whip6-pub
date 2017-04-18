@@ -1,12 +1,13 @@
 #
 # whip6: Warsaw High-performance IPv6.
 #
-# Copyright (c) 2012-2016 InviNets Sp z o.o.
+# Copyright (c) 2012-2017 InviNets Sp. z o.o.
+# Copyright (c) 2012-2017 Przemyslaw Horban
+# Copyright (c) 2012-2017 Szymon Acedanski
 # All rights reserved.
 #
 # This file is distributed under the terms in the attached LICENSE     
-# files. If you do not find these files, copies can be found by writing
-# to technology@invinets.com.
+# files.
 #
 APP_NAME = 'app name'
 BOARD = 'board'
@@ -58,4 +59,3 @@ TAG_SECTION_TYPES = {
     INTERRUPTS:      (lambda t: isinstance(t, dict), 'dictionary'),
     WNESC_BANKS:     (lambda t: isinstance(t, dict), 'dictionary'),
 }
-

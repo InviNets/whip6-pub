@@ -1,5 +1,11 @@
-Copyright (c) 2016-2017 University of Warsaw
-All rights reserved.
+This repository is licensed under the terms of the BSD License below,
+unless otherwise specified in particular source code files.
+
+---
+
+Copyright (c) 2012-2017 InviNets Sp. z o.o., University of Warsaw,
+  Konrad Iwanicki, Przemyslaw Horban, Szymon Acedanski
+  and individual contributors
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions

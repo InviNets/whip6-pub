@@ -1,0 +1,15 @@
+The application serves the purpose of verifying whether a thermometer that the cherry board is equipped with takes reliable measurements.
+
+Every two seconds the application makes a call to a thermometer driver and asks for a measurement of temperature.
+
+*************
+REMARKS
+*************
+- As for now, the cherry board is equipped with a thermometer TMP431A (of address 0x4C).
+- Temperature value is given in tenths of Celsius degrees.
+- One should expect an outcome that is similar to:
+>> Temperature in tenths of degree Celsius: 257
+>> Temperature in tenths of degree Celsius: 257
+>> Temperature in tenths of degree Celsius: 258
+>> Temperature in tenths of degree Celsius: 257
+>> ...

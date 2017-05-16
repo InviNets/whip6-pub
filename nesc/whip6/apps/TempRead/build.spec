@@ -11,8 +11,4 @@ app name: TempReadApp
 build dir: $(SPEC_DIR)/build/$(BOARD)
 
 boards:
- - bboard
- - climboard
- - hyboard
- - lpad2650
- - cc2650dk
+ - cherry-v1

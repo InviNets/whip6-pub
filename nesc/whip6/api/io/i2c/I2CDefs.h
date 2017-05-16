@@ -58,5 +58,6 @@ enum {
   I2C_ACK_END = 0x04,
 };
 
+#define RESOURCE_SOFTWARE_I2C "SoftwareI2C"
 
 #endif /* _I2C_DEFS_H */

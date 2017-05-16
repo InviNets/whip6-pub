@@ -24,6 +24,10 @@ implementation {
     HalUART0PinsPub.TX -> Pins.DIO3;
     HalUART0PinsPub.RX -> Pins.DIO2;
 
+    components HalI2CPinsPub;
+    HalI2CPinsPub.SCL -> Pins.DIO0;
+    HalI2CPinsPub.SDA -> Pins.DIO1;
+
 /*
     TODO: this are the remaining connected pins, may be useful at some point.
 
@@ -33,9 +37,6 @@ implementation {
     HalUART1PinsPub.RTS -> Pins.DIO24;
     HalUART1PinsPub.CTS -> Pins.DIO30;
 
-    components HalI2C0PinsPub;
-    HalI2C0PinsPub.SCI -> Pins.DIO0;
-    HalI2C0PinsPub.SDA -> Pins.DIO1;
 */
 
 }

@@ -22,3 +22,6 @@ dependencies:
 
 make options:
   - PLATFORM_CC26XX_BOOTLOADER_DIO=8
+
+define:
+ - PLATFORM_PRINTF_OVER_SC_UART

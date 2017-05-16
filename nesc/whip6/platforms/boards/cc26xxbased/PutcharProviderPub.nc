@@ -27,15 +27,15 @@ implementation {
 #ifdef PLATFORM_NO_PRINTF
     // -- no putchar
     components DummyPutcharProviderPub;
-#elseif PLATFORM_PRINTF_OVER_UART0
-    // -- putchar over UART0
-    components BlockingWritePutcharProviderPub;
-    components BlockingUART0Pub;
-    BlockingWritePutcharProviderPub.BlockingWrite -> BlockingUART0Pub;
-#else
+#elif PLATFORM_PRINTF_OVER_SC_UART
     // -- putchar over Sensor Controller UART
     components NonBlockingWritePutcharProviderPub;
     components NonBlockingSCUARTPub;
     NonBlockingWritePutcharProviderPub.NonBlockingWrite -> NonBlockingSCUARTPub;
+#else
+    // -- putchar over UART0
+    components BlockingWritePutcharProviderPub;
+    components BlockingUART0Pub;
+    BlockingWritePutcharProviderPub.BlockingWrite -> BlockingUART0Pub;
 #endif
 }

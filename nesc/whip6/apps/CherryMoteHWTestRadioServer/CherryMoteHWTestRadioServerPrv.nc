@@ -9,10 +9,9 @@
  */
 
 #include "string.h"
-
 #include "common.h"
 
-module HWTestRadioServerPrv {
+module CherryMoteHWTestRadioServerPrv {
     uses interface Boot;
 
     uses interface Init as LowInit;
@@ -36,8 +35,8 @@ implementation {
 
         if (status == SUCCESS) {
             if (FRAME_LENGTH == call RawFrame.getLength(&rxFr)) {
-                uint8_t_xdata *data = call RawFrame.getData(&rxFr);
-                if (memcmp(query, (const char*)data, strlen(query)) == 0)
+                uint8_t *data = call RawFrame.getData(&rxFr);
+                if (memcmp(QUERY, (const char*)data, strlen(QUERY)) == 0)
                     shouldSend = 1;
             }
         }
@@ -60,11 +59,11 @@ implementation {
     }
 
     task void sendResp() {
-        uint8_t_xdata *data;
+        uint8_t *data;
         call RawFrame.setLength(&txFr, FRAME_LENGTH);
 
         data = call RawFrame.getData(&txFr);
-        sprintf((char*)data, resp);
+        snprintf((char*)data, MAX_DATA_FRAME_LEN, "%s", RESP);
 
         call LowFrameSender.startSending(&txFr);
     }

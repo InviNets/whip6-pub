@@ -5,11 +5,11 @@
  * All rights reserved.
  */
 
-configuration HWTestApp {
+configuration CherryMoteHWTestApp {
 }
 implementation {
-    components BoardStartupPub, HWTestPrv;
-    HWTestPrv.Boot -> BoardStartupPub;
+    components BoardStartupPub, CherryMoteHWTestPrv;
+    CherryMoteHWTestPrv.Boot -> BoardStartupPub;
 
     components BlockingUART0Pub;
     components new BufferedReaderPub(128) as Reader;
@@ -17,21 +17,21 @@ implementation {
 
     Reader.ReadNow -> BlockingUART0Pub.ReadNow;
     Writer.AsyncWrite -> BlockingUART0Pub.AsyncWrite;
-    HWTestPrv.BufferedRead -> Reader;
-    HWTestPrv.BufferedWrite -> Writer;
+    CherryMoteHWTestPrv.BufferedRead -> Reader;
+    CherryMoteHWTestPrv.BufferedWrite -> Writer;
 
     components new TemperatureProviderPub();
-    HWTestPrv.ReadTemp -> TemperatureProviderPub;
+    CherryMoteHWTestPrv.ReadTemp -> TemperatureProviderPub;
 
     components LedsPub;
-    HWTestPrv.Led -> LedsPub.Led[0];
+    CherryMoteHWTestPrv.Led -> LedsPub.Led[0];
 
     components new PlatformTimerMilliPub();
-    HWTestPrv.Timer -> PlatformTimerMilliPub;
+    CherryMoteHWTestPrv.Timer -> PlatformTimerMilliPub;
 
     components CoreRawRadioPub;
-    HWTestPrv.LowInit -> CoreRawRadioPub;
-    HWTestPrv.RawFrame -> CoreRawRadioPub;
-    HWTestPrv.LowFrameSender -> CoreRawRadioPub;
-    HWTestPrv.LowFrameReceiver -> CoreRawRadioPub;
+    CherryMoteHWTestPrv.LowInit -> CoreRawRadioPub;
+    CherryMoteHWTestPrv.RawFrame -> CoreRawRadioPub;
+    CherryMoteHWTestPrv.LowFrameSender -> CoreRawRadioPub;
+    CherryMoteHWTestPrv.LowFrameReceiver -> CoreRawRadioPub;
 }

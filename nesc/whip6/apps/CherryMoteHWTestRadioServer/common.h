@@ -13,7 +13,10 @@
 #define UART_CMD    'u'
 
 #define FRAME_LENGTH 120
-const char *query = "ping";
-const char *resp = "pong";
+// API doesn't provide any value, this one should work
+#define MAX_DATA_FRAME_LEN 50
+
+#define QUERY "ping"
+#define RESP "pong"
 
 #endif // __COMMON__H__

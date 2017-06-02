@@ -8,16 +8,16 @@
  * files.
  */
 
-configuration HWTestRadioServerApp {
+configuration CherryMoteHWTestRadioServerApp {
 }
 
 implementation {
-    components BoardStartupPub, HWTestRadioServerPrv;
-    HWTestRadioServerPrv.Boot -> BoardStartupPub;
+    components BoardStartupPub, CherryMoteHWTestRadioServerPrv;
+    CherryMoteHWTestRadioServerPrv.Boot -> BoardStartupPub;
 
     components CoreRawRadioPub;
-    HWTestRadioServerPrv.LowInit -> CoreRawRadioPub;
-    HWTestRadioServerPrv.RawFrame -> CoreRawRadioPub;
-    HWTestRadioServerPrv.LowFrameSender -> CoreRawRadioPub;
-    HWTestRadioServerPrv.LowFrameReceiver -> CoreRawRadioPub;
+    CherryMoteHWTestRadioServerPrv.LowInit -> CoreRawRadioPub;
+    CherryMoteHWTestRadioServerPrv.RawFrame -> CoreRawRadioPub;
+    CherryMoteHWTestRadioServerPrv.LowFrameSender -> CoreRawRadioPub;
+    CherryMoteHWTestRadioServerPrv.LowFrameReceiver -> CoreRawRadioPub;
 }

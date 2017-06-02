@@ -5,16 +5,9 @@
  * All rights reserved.
  */
 
-#include <driverlib/osc.h>
-#include "stdio.h"
-#include "string.h"
-#include "common.h"
+#include "CherryMoteHWTest.h"
 
-#define BUFFER_SIZE 50
-#define CBUFFER_SIZE 100
-#define TIMEOUT_MS 1024
-
-module HWTestPrv {
+module CherryMoteHWTestPrv {
     uses interface Boot;
     uses interface BufferedRead;
     uses interface BufferedWrite;
@@ -32,7 +25,7 @@ implementation {
     uint16_t cmd_size = 1;
     error_t result;
     error_t init_status;
-    uint8_t_xdata buffer[BUFFER_SIZE];
+    uint8_t buffer[BUFFER_SIZE];
     char cbuffer[CBUFFER_SIZE];
     platform_frame_t txFr, rxFr;
 
@@ -53,9 +46,9 @@ implementation {
         printf("Bytes lost=%d\n", (int)lostCount);
     }
 
-    event void BufferedRead.readDone(uint8_t_xdata *buffer, uint16_t capacity) {
+    event void BufferedRead.readDone(uint8_t *buffer, uint16_t capacity) {
         int finished = 0;
-        uint8_t_xdata *data;
+        uint8_t *data;
 
         result = SUCCESS;
 
@@ -67,39 +60,40 @@ implementation {
                 break;
             case LED_ON_CMD:
                 call Led.on();
-                sprintf(cbuffer, "%d\n", 1);
-                call BufferedWrite.startWrite((uint8_t_xdata*)cbuffer, strlen(cbuffer));
+                snprintf(cbuffer, CBUFFER_SIZE, "%d\n", 1);
+                call BufferedWrite.startWrite((uint8_t*)cbuffer, strlen(cbuffer));
                 break;
             case XTAL_CMD:
                 call Timer.startWithTimeoutFromNow(TIMEOUT_MS);
                 break;
             case LED_OFF_CMD:
                 call Led.off();
-                sprintf(cbuffer, "%d\n", 0);
-                call BufferedWrite.startWrite((uint8_t_xdata*)cbuffer, strlen(cbuffer));
+                snprintf(cbuffer, CBUFFER_SIZE, "%d\n", 0);
+                call BufferedWrite.startWrite((uint8_t*)cbuffer, strlen(cbuffer));
                 break;
             case RADIO_CMD:
                 if (init_status != SUCCESS) {
+                    result = init_status;
                     printf("LowInit.init() failed with status=%d\n", result);
                     break;
                 }
                 call RawFrame.setLength(&txFr, FRAME_LENGTH);
 
                 data = call RawFrame.getData(&txFr);
-                sprintf((char*)data, query);
+                snprintf((char*)data, MAX_DATA_FRAME_LEN, "%s", QUERY);
 
                 result = call LowFrameSender.startSending(&txFr);
                 if (result != SUCCESS)
                     printf("RADIO_CMD: LowFrameSender.startSending failed with status=%d\n", result);
                 break;
             case UART_CMD:
-                printf(query);
-                printf("\n");
+                printf("%s\n", QUERY);
                 finished = 1;
                 break;
             case ICOUNT_CMD:
                 finished = 1;
-                printf("ICount: Not implemented error\n");
+                // FIXME Implement ICount driver
+                printf("ICount: Not implemented\n");
                 break;
             default:
                 finished = 1;
@@ -109,9 +103,8 @@ implementation {
         if (result != SUCCESS)
             finished = 1;
 
-        if (finished) {
+        if (finished)
             call BufferedRead.startRead(buffer, cmd_size);
-        }
     }
 
     event void LowFrameSender.sendingFinished(platform_frame_t * framePtr, error_t status) {
@@ -122,6 +115,9 @@ implementation {
 
         if (result != SUCCESS)
             printf("LowFrameReceiver.startReceiving failed with status=%d\n", result);
+
+        if (status != SUCCESS || result != SUCCESS)
+            call BufferedRead.startRead(buffer, cmd_size);
     }
 
     event void LowFrameReceiver.receivingFinished(platform_frame_t *fp, error_t status) {
@@ -129,9 +125,9 @@ implementation {
 
         if (status == SUCCESS) {
             if (FRAME_LENGTH == call RawFrame.getLength(&rxFr)) {
-                uint8_t_xdata *data = call RawFrame.getData(&rxFr);
+                uint8_t *data = call RawFrame.getData(&rxFr);
 
-                if (memcmp(resp, (const char*)data, strlen(resp)) == 0)
+                if (memcmp(RESP, (const char*)data, strlen(RESP)) == 0)
                     res = 1;
             }
         }
@@ -139,26 +135,27 @@ implementation {
             printf("LowFrameReceiver.receivingFinished failed with status=%d\n",
                    status);
 
-        sprintf(cbuffer, "%d\n", res);
-        call BufferedWrite.startWrite((uint8_t_xdata*)cbuffer, strlen(cbuffer));
+        snprintf(cbuffer, CBUFFER_SIZE, "%d\n", res);
+        call BufferedWrite.startWrite((uint8_t*)cbuffer, strlen(cbuffer));
     }
     event void Timer.fired() {
         int res = OSCClockSourceGet(OSC_SRC_CLK_LF) == OSC_XOSC_LF;
-        sprintf(cbuffer, "%d\n", res);
-        call BufferedWrite.startWrite((uint8_t_xdata*)cbuffer, strlen(cbuffer));
+        snprintf(cbuffer, CBUFFER_SIZE, "%d\n", res);
+        call BufferedWrite.startWrite((uint8_t*)cbuffer, strlen(cbuffer));
     }
 
     event void ReadTemp.readDone(error_t result, int16_t val) {
         if (result == SUCCESS) {
-            sprintf(cbuffer, "%d\n", val);
-            call BufferedWrite.startWrite((uint8_t_xdata*)cbuffer, strlen(cbuffer));
+            snprintf(cbuffer, CBUFFER_SIZE, "%d\n", val);
+            call BufferedWrite.startWrite((uint8_t*)cbuffer, strlen(cbuffer));
         }
         else {
             printf("ReadTemp.readDone failed with status=%d\n", result);
+            call BufferedRead.startRead(buffer, cmd_size);
         }
     }
 
-    event void BufferedWrite.writeDone(error_t result, uint8_t_xdata *buffer, uint16_t size) {
+    event void BufferedWrite.writeDone(error_t result, uint8_t *buffer, uint16_t size) {
         call BufferedRead.startRead(buffer, cmd_size);
     }
 }

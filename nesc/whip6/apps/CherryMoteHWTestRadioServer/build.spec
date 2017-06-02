@@ -7,7 +7,7 @@
 # This file is distributed under the terms in the attached LICENSE
 # files.
 #
-app name: HWTestRadioServerApp
+app name: CherryMoteHWTestRadioServerApp
 
 boards:
  - cherry-v1

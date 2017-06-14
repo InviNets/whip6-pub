@@ -51,4 +51,6 @@ implementation {
     GenericUartPrv.PowerDomain -> PowerDomains.SerialDomain;
     GenericUartPrv.RXPin -> Pins.PRX;
     GenericUartPrv.TXPin -> Pins.PTX;
+    GenericUartPrv.RTSPin -> Pins.PRTS;
+    GenericUartPrv.CTSPin -> Pins.PCTS;
 }

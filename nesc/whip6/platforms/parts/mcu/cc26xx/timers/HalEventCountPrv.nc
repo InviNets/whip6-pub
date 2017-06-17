@@ -33,8 +33,11 @@ generic module HalEventCountPrv() {
 
 implementation {
     uint32_t running;  // mask of TIMER_A and TIMER_B
+    // It counts events that occurred during previous timer runs. It is updated
+    // only when timer overrun happens.
     unsigned long long evCnt[2] = {0};
-    // Value of timer used when the timer is stopped.
+    // Value of timer used when the timer is stopped. Otherwise the timer
+    // register should be read.
     unsigned cachedTimer[2] = {0};
 
     unsigned int getCntIdx(uint32_t which) {
@@ -156,14 +159,30 @@ implementation {
         return SUCCESS;
     }
 
+    unsigned getTimerValue(uint32_t which) {
+        if (!running)
+            return cachedTimer[getCntIdx(which)];
+        else
+            return TimerValueGet(call CC26xxTimer.base(), which);
+    }
+
     unsigned long long readValue(uint32_t which, unsigned long long *res) {
         unsigned long long value;
         unsigned read_value;
-        if (!running)
-            read_value = cachedTimer[getCntIdx(which)];
-        else
-            read_value = TimerValueGet(call CC26xxTimer.base(), which);
-        atomic value = evCnt[getCntIdx(which)];
+        atomic {
+            // We have to be really careful here to avoid race conditions.
+            // The main problem is non-atomicity of reading the pair:
+            // (timer value, evCnt). It wouldn't be a problem if timer stopped
+            // after reaching MAX_COUNT but then we would loose some events.
+            // Atomic statement will block the interrupt from updating evCnt
+            // in between the reads.
+            // However, an overflow can still happen and we have to check it
+            // manually.
+            read_value = getTimerValue(which);
+            value = evCnt[getCntIdx(which)];
+            if (getTimerValue(which) < read_value)
+                value += MAX_COUNT;
+        }
         *res = value + read_value;
         return SUCCESS;
     }

@@ -21,8 +21,8 @@ implementation {
     components CC26xxPinsPub as Pins;
 
     components HalUART0PinsPub;
-    HalUART0PinsPub.TX -> Pins.DIO3;
-    HalUART0PinsPub.RX -> Pins.DIO2;
+    HalUART0PinsPub.TX -> Pins.DIO28;
+    HalUART0PinsPub.RX -> Pins.DIO29;
 
     components HalI2CPinsPub;
     HalI2CPinsPub.SCL -> Pins.DIO0;

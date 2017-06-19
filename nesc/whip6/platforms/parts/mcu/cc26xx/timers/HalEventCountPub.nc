@@ -8,7 +8,7 @@
  * files.
  */
 
-generic configuration HalEventCountPub() {
+generic configuration HalEventCountPub(uint32_t pollingInterval) {
     provides interface EventCount as EvCntA;
     provides interface EventCount as EvCntB;
 
@@ -20,7 +20,7 @@ generic configuration HalEventCountPub() {
 }
 
 implementation {
-    components new HalEventCountPrv() as Prv;
+    components new HalEventCountPrv(pollingInterval) as Prv;
     EvCntA = Prv.EvCntA;
     EvCntB = Prv.EvCntB;
     EvCntAConfig = Prv.EvCntAConfig;
@@ -30,11 +30,12 @@ implementation {
 
     components new CC26xxTimerPub() as Timer;
     Prv.CC26xxTimer -> Timer;
-    Prv.ChannelAInterrupt -> Timer.ChannelAInterrupt;
-    Prv.ChannelBInterrupt -> Timer.ChannelBInterrupt;
 
     components CC26xxPowerDomainsPub as PowerDomains;
     Prv.PowerDomain -> PowerDomains.PeriphDomain;
+
+    components new PlatformTimerMilliPub();
+    Prv.Timer -> PlatformTimerMilliPub;
 
     components new HalAskBeforeSleepPub();
     Prv.AskBeforeSleep -> HalAskBeforeSleepPub;

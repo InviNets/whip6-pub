@@ -11,9 +11,10 @@
 #include <driverlib/timer.h>
 #include <driverlib/gpio.h>
 
-#define MAX_COUNT 0xffff
+#define MAX_COUNT 0xffffff
+#define TIMER_SIZE 16
 
-generic module HalEventCountPrv() {
+generic module HalEventCountPrv(uint32_t pollingInterval) {
     provides interface EventCount as EvCntA;
     provides interface EventCount as EvCntB;
 
@@ -27,18 +28,18 @@ generic module HalEventCountPrv() {
     uses interface ShareableOnOff as PowerDomain;
     uses interface AskBeforeSleep;
 
-    uses interface ExternalEvent as ChannelAInterrupt @atmostonce();
-    uses interface ExternalEvent as ChannelBInterrupt @atmostonce();
+    uses interface Timer<TMilli, uint32_t>;
 }
 
 implementation {
     uint32_t running;  // mask of TIMER_A and TIMER_B
     // It counts events that occurred during previous timer runs. It is updated
     // only when timer overrun happens.
-    unsigned long long evCnt[2] = {0};
-    // Value of timer used when the timer is stopped. Otherwise the timer
-    // register should be read.
-    unsigned cachedTimer[2] = {0};
+    unsigned long long overflows[2] = {0};
+    // Value of timer that was read last time. It can be used as a cache after
+    // stop - the value of the counter is written here immediately before the
+    // stop.
+    unsigned lastRead[2] = {0};
 
     unsigned int getCntIdx(uint32_t which) {
         return (which & TIMER_A) != 0;
@@ -98,24 +99,34 @@ implementation {
         call PowerDomain.off();
     }
 
-    error_t start(uint32_t which) {
-        uint32_t flags = 0;
+    unsigned getTimerValue(uint32_t which) {
+        if (running & which)
+            return TimerValueGet(call CC26xxTimer.base(), which);
+        else
+            return lastRead[getCntIdx(which)];
+    }
 
+    unsigned long long readValue(uint32_t which) {
+        unsigned long long ov_value;
+        unsigned cnt_value;
+        atomic {
+            cnt_value = getTimerValue(which);
+            if (cnt_value < lastRead[getCntIdx(which)])
+                overflows[getCntIdx(which)] += MAX_COUNT;
+            lastRead[getCntIdx(which)] = cnt_value;
+            ov_value = overflows[getCntIdx(which)];
+        }
+        return ov_value + cnt_value;
+    }
+
+    error_t start(uint32_t which) {
         if (!running)
             startPeripheral();
 
-        if (which & TIMER_A) {
+        if (which & TIMER_A)
             pinEnable(call PinA.IOId(), TIMER_A);
-            flags = TIMER_CAPA_MATCH;
-            call ChannelAInterrupt.clearPending();
-            call ChannelAInterrupt.asyncNotifications(TRUE);
-        }
-        else {
+        else
             pinEnable(call PinB.IOId(), TIMER_B);
-            flags = TIMER_CAPB_MATCH;
-            call ChannelBInterrupt.clearPending();
-            call ChannelBInterrupt.asyncNotifications(TRUE);
-        }
 
         if (!running) {
             TimerConfigure(call CC26xxTimer.base(),
@@ -127,82 +138,44 @@ implementation {
 
         TimerEventControl(call CC26xxTimer.base(), which, getTimerCountMode(which));
 
-        // Since there's no way to atomically read both 16-bit timer and prescaler
-        // value, we'll not use the prescaler.
-        TimerPrescaleMatchSet(call CC26xxTimer.base(), which, 0);
-        TimerMatchSet(call CC26xxTimer.base(), which, MAX_COUNT);
+        TimerPrescaleMatchSet(call CC26xxTimer.base(), which, MAX_COUNT >> TIMER_SIZE);
+        TimerMatchSet(call CC26xxTimer.base(), which, MAX_COUNT & ((1 << TIMER_SIZE) - 1));
 
-        TimerIntEnable(call CC26xxTimer.base(), flags);
         TimerEnable(call CC26xxTimer.base(), which);
 
-        running |= which;
+        if (!running)
+            call Timer.startWithTimeoutFromNow(pollingInterval);
+
+        atomic running |= which;
 
         return SUCCESS;
     }
 
     error_t stop(uint32_t which) {
-        cachedTimer[getCntIdx(which)] = TimerValueGet(call CC26xxTimer.base(), which);
+        readValue(which); // for caching current value
+        atomic running &= ~which;
+        if (!running)
+            call Timer.stop();
 
         TimerDisable(call CC26xxTimer.base(), which);
-        TimerIntDisable(call CC26xxTimer.base(),
-                        (which & TIMER_A) ? TIMER_CAPA_MATCH : TIMER_CAPB_MATCH);
 
         if (which & TIMER_A)
             pinDisable(call PinA.IOId(), TIMER_A);
         else
             pinDisable(call PinB.IOId(), TIMER_B);
 
-        running &= ~which;
         if (!running)
             stopPeripheral();
 
         return SUCCESS;
     }
 
-    unsigned getTimerValue(uint32_t which) {
-        if (!running)
-            return cachedTimer[getCntIdx(which)];
-        else
-            return TimerValueGet(call CC26xxTimer.base(), which);
-    }
-
-    unsigned long long readValue(uint32_t which, unsigned long long *res) {
-        unsigned long long value;
-        unsigned read_value;
-        atomic {
-            // We have to be really careful here to avoid race conditions.
-            // The main problem is non-atomicity of reading the pair:
-            // (timer value, evCnt). It wouldn't be a problem if timer stopped
-            // after reaching MAX_COUNT but then we would loose some events.
-            // Atomic statement will block the interrupt from updating evCnt
-            // in between the reads.
-            // However, an overflow can still happen and we have to check it
-            // manually.
-            read_value = getTimerValue(which);
-            value = evCnt[getCntIdx(which)];
-            if (getTimerValue(which) < read_value)
-                value += MAX_COUNT;
-        }
-        *res = value + read_value;
-        return SUCCESS;
-    }
-
-    void InterruptHandler(uint32_t which) {
-        uint32_t status;
-        uint32_t interruptMask;
-
-        status = TimerIntStatus(call CC26xxTimer.base(), true);
-        if (which & TIMER_A)
-            interruptMask = TIMER_CAPA_MATCH;
-        else
-            interruptMask = TIMER_CAPB_MATCH;
-
-        if (status & interruptMask) {
-            TimerIntClear(call CC26xxTimer.base(), interruptMask);
-            TimerIntStatus(call CC26xxTimer.base(), true); // for write propagation
-            // Now we require at least two system cycles before returning
-            atomic evCnt[getCntIdx(which)] += MAX_COUNT;
-        }
+    event void Timer.fired() {
+        call Timer.startWithTimeoutFromLastTrigger(pollingInterval);
+        if (running & TIMER_A)
+            readValue(TIMER_A);
+        if (running & TIMER_B)
+            readValue(TIMER_B);
     }
 
     command error_t EvCntA.start() {
@@ -222,19 +195,13 @@ implementation {
     }
 
     command error_t EvCntA.read(unsigned long long *value) {
-        return readValue(TIMER_A, value);
+        *value = readValue(TIMER_A);
+        return SUCCESS;
     }
 
     command error_t EvCntB.read(unsigned long long *value) {
-        return readValue(TIMER_B, value);
-    }
-
-    async event void ChannelAInterrupt.triggered() {
-        InterruptHandler(TIMER_A);
-    }
-
-    async event void ChannelBInterrupt.triggered() {
-        InterruptHandler(TIMER_B);
+        *value = readValue(TIMER_B);
+        return SUCCESS;
     }
 
     event void PinA.configure() {
@@ -264,5 +231,4 @@ implementation {
     default command event_count_mode_t EvCntBConfig.getMode() {
         return EVENT_COUNT_MODE_RISING_EDGE;
     }
-
 }

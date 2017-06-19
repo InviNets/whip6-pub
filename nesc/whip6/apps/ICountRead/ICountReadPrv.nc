@@ -13,11 +13,11 @@
 module ICountReadPrv {
     uses interface Boot;
     uses interface Timer<TMilli, uint32_t>;
-    uses interface EventCount as ICount;
+    uses interface EventCount<uint64_t> as ICount;
 }
 
 implementation {
-    int timestamp;
+    uint32_t timestamp;
 
     event void Boot.booted() {
         call ICount.start();
@@ -26,7 +26,7 @@ implementation {
     }
 
     event void Timer.fired() {
-        unsigned long long ticks = 0;
+        uint64_t ticks = 0;
         error_t res = SUCCESS;
 
         timestamp += 1;
@@ -36,7 +36,7 @@ implementation {
         if (res != SUCCESS)
             printf("Failed to read ICount\n");
         else
-            printf("ICount - number of ticks: %u, timestamp: %d\n",
-                    (unsigned)ticks, timestamp);
+            printf("ICount - number of ticks: %u, timestamp: %u\n",
+                   (uint32_t)ticks, timestamp);
     }
 }

@@ -9,8 +9,8 @@
  */
 
 generic configuration HalEventCountPub(uint32_t pollingInterval) {
-    provides interface EventCount as EvCntA;
-    provides interface EventCount as EvCntB;
+    provides interface EventCount<uint64_t> as EvCntA;
+    provides interface EventCount<uint64_t> as EvCntB;
 
     uses interface EventCountConfig as EvCntAConfig;
     uses interface EventCountConfig as EvCntBConfig;

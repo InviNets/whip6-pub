@@ -15,8 +15,8 @@
 #define TIMER_SIZE 16
 
 generic module HalEventCountPrv(uint32_t pollingInterval) {
-    provides interface EventCount as EvCntA;
-    provides interface EventCount as EvCntB;
+    provides interface EventCount<uint64_t> as EvCntA;
+    provides interface EventCount<uint64_t> as EvCntB;
 
     uses interface EventCountConfig as EvCntAConfig @atmostonce();
     uses interface EventCountConfig as EvCntBConfig @atmostonce();
@@ -35,13 +35,13 @@ implementation {
     uint32_t running;  // mask of TIMER_A and TIMER_B
     // It counts events that occurred during previous timer runs. It is updated
     // only when timer overrun happens.
-    unsigned long long overflows[2] = {0};
+    uint64_t overflows[2] = {0};
     // Value of timer that was read last time. It can be used as a cache after
     // stop - the value of the counter is written here immediately before the
     // stop.
-    unsigned lastRead[2] = {0};
+    uint32_t lastRead[2] = {0};
 
-    unsigned int getCntIdx(uint32_t which) {
+    uint32_t getCntIdx(uint32_t which) {
         return (which & TIMER_A) != 0;
     }
 
@@ -99,16 +99,16 @@ implementation {
         call PowerDomain.off();
     }
 
-    unsigned getTimerValue(uint32_t which) {
+    uint32_t getTimerValue(uint32_t which) {
         if (running & which)
             return TimerValueGet(call CC26xxTimer.base(), which);
         else
             return lastRead[getCntIdx(which)];
     }
 
-    unsigned long long readValue(uint32_t which) {
-        unsigned long long ov_value;
-        unsigned cnt_value;
+    uint64_t readValue(uint32_t which) {
+        uint64_t ov_value;
+        uint32_t cnt_value;
         atomic {
             cnt_value = getTimerValue(which);
             if (cnt_value < lastRead[getCntIdx(which)])
@@ -194,12 +194,12 @@ implementation {
         return stop(TIMER_B);
     }
 
-    command error_t EvCntA.read(unsigned long long *value) {
+    command error_t EvCntA.read(uint64_t *value) {
         *value = readValue(TIMER_A);
         return SUCCESS;
     }
 
-    command error_t EvCntB.read(unsigned long long *value) {
+    command error_t EvCntB.read(uint64_t *value) {
         *value = readValue(TIMER_B);
         return SUCCESS;
     }

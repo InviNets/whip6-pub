@@ -8,7 +8,7 @@
  * files.
  */
 generic configuration ICountPub() {
-    provides interface EventCount;
+    provides interface EventCount<uint64_t>;
 }
 
 implementation {

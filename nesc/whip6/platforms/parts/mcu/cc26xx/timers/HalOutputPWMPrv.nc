@@ -66,7 +66,7 @@ implementation {
     void pinBEnable() {
         if (call PinB.IOId() != IOID_UNUSED) {
             IOCPortConfigureSet(call PinB.IOId(),
-                    IOC_PORT_MCU_PORT_EVENT0 +
+                    IOC_PORT_MCU_PORT_EVENT0 + 1 +
                         (2 * call CC26xxTimer.number()),
                     IOC_STD_OUTPUT);
         }

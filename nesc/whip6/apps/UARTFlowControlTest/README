@@ -1,0 +1,42 @@
+The application serves the purpose of verifying whether UART communication between the node and the supervisor supports flow control. Out of two available UARTs only the full one (UARTF) is tested.
+
+The application runs alternately in two modes:
+* reading and writing are ON,
+* reading and writing are OFF.
+
+When reading is ON: the node takes out characters from the UARTF buffer.
+When reading is OFF: the node does not empty the UARTF buffer.
+When writing is ON: the node sends "ala ma psa" via UARTF.
+When writing is OFF: the node does not send any data via UARTF.
+
+The mode is changed every ten seconds.
+
+*************
+How to use it
+*************
+0. Make sure that the supervisor supports flow control (for the cherry board use the image of a version > 8).
+1. Install the application.
+2. Copy scripts openUARTF.sh and openUARTB.sh on the board and run both of them - as a result, two instances of picocom (let us denote them picocomF and picocomB respectively) handle communication between the node and the supervisor.
+3. Observe data printed by picocomB to get information about the application mode.
+4. If the application is neither reading nor writing: enter at least 10 characters of one kind, i.e. 'a'.
+5. If the application is reading and writing: keep picocomF closed (exit with ctrl + a + x).
+
+****************
+Expected outcome
+****************
+Ad 4.:
+- After the application switches into a different mode the node should receive first 10 characters entered by the user beforehand and print it via picocomB: "reading done: <10 characters>".
+
+Ad 5.:
+- After the application switches into a different mode, open picocomF. A string "ala ma psa" should be printed in the terminal of picocomF. At the same time, the node communicates via picocomB: "writing done: 0".
+
+**********************
+How to diagnose errors
+**********************
+Ad 4.:
+If reading is not done and it turns out that the node received *only one character* after it turned reading on -> flow control is not supported.
+
+If reading is not done and it turns out that the node received *no characters* after it turned reading on -> interrupts are not properly handled in most basic modules that perform asynchronous reading.
+
+Ad 5.:
+If there is no string "ala ma psa" printed and the string is printed only when both writing and picocomF are on -> flow control is not supported.

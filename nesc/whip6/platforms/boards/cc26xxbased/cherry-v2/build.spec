@@ -14,7 +14,7 @@ board: cherry-v2
 
 dependencies:
   - platforms/boards/cc26xxbased
-  - platforms/boards/cc26xxbased/cherry-v1/scif_uart
+  - platforms/boards/cc26xxbased/cherry-v2/scif_uart
   - platforms/parts/sensor
   - lib/io/i2c
   - lib/io/leds
@@ -23,6 +23,5 @@ dependencies:
 make options:
   - PLATFORM_CC26XX_BOOTLOADER_DIO=11
 
-# TODO As long as we don't have correct SC driver compiled
 define:
- - PLATFORM_NO_PRINTF
+ - PLATFORM_PRINTF_OVER_SC_UART

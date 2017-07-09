@@ -34,4 +34,7 @@ implementation {
     CherryMoteHWTestPrv.RawFrame -> CoreRawRadioPub;
     CherryMoteHWTestPrv.LowFrameSender -> CoreRawRadioPub;
     CherryMoteHWTestPrv.LowFrameReceiver -> CoreRawRadioPub;
+
+    components new ICountPub();
+    CherryMoteHWTestPrv.ICount -> ICountPub.EventCount;
 }

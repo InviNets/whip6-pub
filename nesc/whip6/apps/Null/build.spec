@@ -19,4 +19,5 @@ boards:
  - native
  - maps1
  - cc2650dk
+ - cherry-v1
 build dir: $(SPEC_DIR)/build/$(BOARD)

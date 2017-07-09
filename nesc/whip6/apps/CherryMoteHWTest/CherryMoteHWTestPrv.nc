@@ -14,6 +14,7 @@ module CherryMoteHWTestPrv {
     uses interface Led;
     uses interface DimensionalRead<TDeciCelsius, int16_t> as ReadTemp;
     uses interface Timer<TMilli, uint32_t>;
+    uses interface EventCount<uint64_t> as ICount;
 
     uses interface Init as LowInit;
     uses interface RawFrame;
@@ -35,6 +36,7 @@ implementation {
         init_status = call LowInit.init();
         // We want to avoid printing about errors here because it can break
         // UART test - it will be delayed for later
+        call ICount.start();
         result = call BufferedRead.startRead(buffer, cmd_size);
         // this printf is allowed because it's an UART error anyway
         if (result != SUCCESS) {
@@ -90,11 +92,22 @@ implementation {
                 printf("%s\n", QUERY);
                 finished = 1;
                 break;
-            case ICOUNT_CMD:
+            case ICOUNT_CMD: {
+                uint64_t ticks = 0;
+
                 finished = 1;
-                // FIXME Implement ICount driver
-                printf("ICount: Not implemented\n");
+
+                result = call ICount.read(&ticks);
+                if (result != SUCCESS)
+                    printf("ICount read failed\n");
+                else {
+                    snprintf(cbuffer, CBUFFER_SIZE, "%u, %u\n",
+                            (uint32_t)(ticks >> 32),
+                            (uint32_t)(ticks & ((1ULL << 32) - 1)));
+                    call BufferedWrite.startWrite((uint8_t*)cbuffer, strlen(cbuffer));
+                }
                 break;
+            }
             default:
                 finished = 1;
                 printf("Unknown command: %c\n", buffer[0]);

@@ -46,7 +46,6 @@ implementation {
             busy = TRUE;
         }
 
-        UARTIntClear(uartBase, UART_INT_RX);
         UARTIntEnable(uartBase, UART_INT_RX);
         return SUCCESS;
     }

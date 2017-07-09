@@ -30,6 +30,8 @@ generic module HalConfigureUARTPrv(uint32_t uartBase, uint32_t baud, bool enable
 
     uses interface CC26xxPin as RXPin @atmostonce();
     uses interface CC26xxPin as TXPin @atmostonce();
+    uses interface CC26xxPin as CTSPin @atmostonce();
+    uses interface CC26xxPin as RTSPin @atmostonce();
     uses interface ExternalEvent as Interrupt @exactlyonce();
     uses interface ShareableOnOff as PowerDomain @exactlyonce();
 }
@@ -54,6 +56,7 @@ implementation {
         UARTConfigSetExpClk(uartBase, SysCtrlClockGet(), baud,
                 UART_CONFIG_WLEN_8 | UART_CONFIG_PAR_NONE | UART_CONFIG_STOP_ONE);
         UARTEnable(uartBase);
+        UARTHwFlowControlEnable(uartBase);
         if (enableFIFO) {
             UARTFIFOEnable(uartBase);
         } else {
@@ -72,6 +75,16 @@ implementation {
     event void TXPin.configure() {
         IOCPinTypeUart(uartBase, IOID_UNUSED, call TXPin.IOId(), IOID_UNUSED,
                 IOID_UNUSED);
+    }
+
+    event void CTSPin.configure() {
+        IOCPinTypeUart(uartBase, IOID_UNUSED, IOID_UNUSED, call CTSPin.IOId(),
+                IOID_UNUSED);
+    }
+
+    event void RTSPin.configure() {
+        IOCPinTypeUart(uartBase, IOID_UNUSED, IOID_UNUSED, IOID_UNUSED,
+                call RTSPin.IOId());
     }
 
     async event void Interrupt.triggered() {}

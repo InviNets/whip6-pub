@@ -38,6 +38,8 @@ generic configuration HalBlockingUARTXPrv(
     {
         interface CC26xxPin as RXPin;
         interface CC26xxPin as TXPin;
+        interface CC26xxPin as RTSPin;
+        interface CC26xxPin as CTSPin;
         interface ShareableOnOff as PowerDomain;
         interface ExternalEvent as Interrupt @exactlyonce();
     }
@@ -56,6 +58,8 @@ implementation
     CfgPrv.PowerDomain = PowerDomain;
     CfgPrv.RXPin = RXPin;
     CfgPrv.TXPin = TXPin;
+    CfgPrv.RTSPin = RTSPin;
+    CfgPrv.CTSPin = CTSPin;
     CfgPrv.Interrupt = Interrupt;
 
     components HalCC26xxSleepPub;

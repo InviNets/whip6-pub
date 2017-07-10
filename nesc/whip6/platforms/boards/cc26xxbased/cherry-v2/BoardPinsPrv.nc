@@ -23,10 +23,8 @@ implementation {
     components HalUART0PinsPub;
     HalUART0PinsPub.TX -> Pins.DIO3;
     HalUART0PinsPub.RX -> Pins.DIO2;
-    /*
     HalUART0PinsPub.CTS -> Pins.DIO9;
     HalUART0PinsPub.RTS -> Pins.DIO8;
-    */
 
     components HalI2CPinsPub;
     HalI2CPinsPub.SCL -> Pins.DIO19;

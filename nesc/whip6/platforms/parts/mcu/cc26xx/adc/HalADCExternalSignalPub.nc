@@ -18,7 +18,7 @@
 
 #include <driverlib/aux_adc.h>
 #include "DimensionTypes.h"
-#include "hal_adc_resource.h"
+#include "hal_adc.h"
 
 generic configuration HalADCExternalSignalPub() {
     provides interface DimensionalRead<TMilliVolt, int16_t>;

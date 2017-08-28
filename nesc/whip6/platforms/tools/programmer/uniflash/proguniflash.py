@@ -24,6 +24,8 @@ class ProgBl(BuildStep):
             '-targetOp', 'reset')
     elif find_executable('dslite.sh'):
         self.call('dslite.sh', '-c', config_file, '-f', '-v', '-e',
+            '-s', 'ResetOnRestart=true',
+            '-b', 'Erase',
             os.path.join(self.build_dir, 'app.workingcopy.hex'))
     else:
         raise RuntimeError("Neither uniflash.sh nor dslite.sh found. "

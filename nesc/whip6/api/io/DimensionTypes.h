@@ -4,7 +4,7 @@
  * Copyright (c) 2012-2017 Przemyslaw Horban
  * All rights reserved.
  *
- * This file is distributed under the terms in the attached LICENSE     
+ * This file is distributed under the terms in the attached LICENSE
  * files.
  */
 
@@ -17,6 +17,7 @@
 
 typedef struct { uint8_t dummy; } TDeciCelsius;
 typedef struct { uint8_t dummy; } TMilliVolt;
+typedef struct { uint8_t dummy; } TMilliAmp;
 typedef struct { uint8_t dummy; } TMilliPascal;
 typedef struct { uint8_t dummy; } TPercentage;
 typedef struct { uint8_t dummy; } TScalar;

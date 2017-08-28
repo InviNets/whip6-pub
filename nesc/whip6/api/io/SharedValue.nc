@@ -13,7 +13,7 @@
  *
  * Interface for storing a value used by more than one component.
  * Any user may read or set the value, but all the users are notified
- * then the value changes.
+ * when the value changes.
  */
 
 interface SharedValue<value_type> {

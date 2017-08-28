@@ -182,7 +182,7 @@
 #endif
 
 #ifndef SET_CCFG_BL_CONFIG_BL_LEVEL
-#define SET_CCFG_BL_CONFIG_BL_LEVEL                  0x0        // Active low to open boot loader backdoor
+#define SET_CCFG_BL_CONFIG_BL_LEVEL                  BOOTLOADER_DIO_LEVEL        // Active low to open boot loader backdoor
 //#define SET_CCFG_BL_CONFIG_BL_LEVEL                     0x1        // Active high to open boot loader backdoor
 #endif
 

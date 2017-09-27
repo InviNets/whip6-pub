@@ -51,8 +51,8 @@ def main():
 
   else:
     sys.stderr.write('smake project dir not found\n')
-    sys.stderr.write('If you are using a repo-split setup, make sure you have a symlink nesc/whip6/smake pointing to'
-                     ' the smake/ dir in the base repository\n')
+    sys.stderr.write('If you are using a repo-split setup, make sure you have the pub/ prv/ cross '
+                     'symlinks. Refer to the setup documentation for detailed instructions.\n')
     sys.exit(-1)
 
 if __name__ == '__main__':

@@ -39,6 +39,8 @@ module HalMyNewtBLEPhyPrv {
     uses interface RFCoreClaim @exactlyonce();
     uses interface AsyncCounter<TMyNewtCPUTime, uint32_t> as MyNewtCPUTime;
     uses interface Timer<TMilli, uint32_t> as WatchdogTimer;
+    uses interface StatsIncrementer<uint32_t> as NumConnectionEvents;
+    uses interface StatsIncrementer<uint32_t> as NumConnectionPacketsSent;
 }
 implementation {
     typedef enum {
@@ -628,6 +630,7 @@ implementation {
                 mynewt_glue_ble_phy_adv_end(
                         status == RF_CORE_RADIO_OP_STATUS_BLE_DONE_CONNECT);
                 break;
+
             case STATE_SLAVE:
                 status = bleSlaveCmd.status;
                 timestamp_valid = bleSlaveOutput.pktStatus.bTimeStampValid
@@ -635,6 +638,7 @@ implementation {
                         || status == RF_CORE_RADIO_OP_STATUS_BLE_DONE_NOSYNC
                         || status == RF_CORE_RADIO_OP_STATUS_BLE_DONE_ENDED);
                 timestamp = rat2cputime(bleSlaveOutput.timeStamp);
+
                 BLE_PHY_DBGPRINTF("slave/done: 0x%04x nTx=%d nTxDone=%d "
                         "nTxRetx=%d nRxBufFull=%d ts=%lu tsrat=%lu danchor=%d\r\n",
                         status, bleSlaveOutput.nTx,
@@ -643,11 +647,23 @@ implementation {
                         timestamp_valid ? timestamp : 0,
                         bleSlaveOutput.timeStamp,
                         bleSlaveOutput.timeStamp - m_start_time);
+
+                call NumConnectionEvents.increment(1);
+                call NumConnectionPacketsSent.increment(bleSlaveOutput.nTx);
+
+                bleSlaveOutput.nTx = 0;
+                bleSlaveOutput.nTxEntryDone = 0;
+                bleSlaveOutput.nTxRetrans = 0;
+                bleSlaveOutput.nRxBufFull = 0;
+
                 memcpy(&seq_stat, &bleSlaveParams.seqStat, 1);
                 seq_stat = ~seq_stat;
+
                 mynewt_glue_ble_phy_conn_end(seq_stat, timestamp_valid,
                         timestamp);
+
                 break;
+
             default:
                 /* do nothing */
         }
@@ -737,4 +753,7 @@ implementation {
     async event void RFCore.onTXDone() { }
     async event void RFCore.onTXPkt() { }
     event void RFCore.fatalError(const char* message) { }
+
+    default command void inline NumConnectionEvents.increment(uint32_t delta) { }
+    default command void inline NumConnectionPacketsSent.increment(uint32_t delta) { }
 }

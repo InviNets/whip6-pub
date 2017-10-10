@@ -10,10 +10,15 @@
 
 configuration HalMyNewtBLEPhyPub {
     provides interface Init @exactlyonce();
+
+    uses interface StatsIncrementer<uint32_t> as NumConnectionEvents;
+    uses interface StatsIncrementer<uint32_t> as NumConnectionPacketsSent;
 }
 implementation {
     components HalMyNewtBLEPhyPrv as Prv;
     Init = Prv.Init;
+    NumConnectionPacketsSent = Prv.NumConnectionPacketsSent;
+    NumConnectionEvents = Prv.NumConnectionEvents;
 
     components RFCorePrv;
     Prv.RFCore -> RFCorePrv;

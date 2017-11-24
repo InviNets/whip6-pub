@@ -8,13 +8,14 @@
  * files.
  */
 
+
 #include <driverlib/timer.h>
 #include <driverlib/gpio.h>
 
-#define MAX_COUNT 0xffffff
+#define MAX_COUNT 0x800
 #define TIMER_SIZE 16
 
-generic module HalEventCountPrv(uint32_t pollingInterval) {
+generic module HalEventCountPrv() {
     provides interface EventCount<uint64_t> as EvCntA;
     provides interface EventCount<uint64_t> as EvCntB;
 
@@ -25,10 +26,10 @@ generic module HalEventCountPrv(uint32_t pollingInterval) {
     uses interface CC26xxPin as PinB @atmostonce();
 
     uses interface CC26xxTimer @exactlyonce();
+    uses interface ExternalEvent as ChannelAInterrupt;
+    uses interface ExternalEvent as ChannelBInterrupt;
     uses interface ShareableOnOff as PowerDomain;
     uses interface AskBeforeSleep;
-
-    uses interface Timer<TMilli, uint32_t>;
 }
 
 implementation {
@@ -110,9 +111,19 @@ implementation {
         uint64_t ov_value;
         uint32_t cnt_value;
         atomic {
-            cnt_value = getTimerValue(which);
-            if (cnt_value < lastRead[getCntIdx(which)])
-                overflows[getCntIdx(which)] += MAX_COUNT;
+            cnt_value = getTimerValue(which) & (MAX_COUNT - 1);
+            if (which & TIMER_A) {
+                if (call ChannelAInterrupt.getPending() |
+                        (TimerIntStatus(call CC26xxTimer.base(), TRUE) & TIMER_CAPA_MATCH)) {
+                    cnt_value = getTimerValue(TIMER_A) | MAX_COUNT;
+                }
+            }
+            if (which & TIMER_B) {
+                if (call ChannelBInterrupt.getPending() |
+                        (TimerIntStatus(call CC26xxTimer.base(), TRUE) & TIMER_CAPB_MATCH)) {
+                    cnt_value = getTimerValue(TIMER_B) | MAX_COUNT;
+                }
+            }
             lastRead[getCntIdx(which)] = cnt_value;
             ov_value = overflows[getCntIdx(which)];
         }
@@ -141,10 +152,17 @@ implementation {
         TimerPrescaleMatchSet(call CC26xxTimer.base(), which, MAX_COUNT >> TIMER_SIZE);
         TimerMatchSet(call CC26xxTimer.base(), which, MAX_COUNT & ((1 << TIMER_SIZE) - 1));
 
+        if (which & TIMER_A) {
+            call ChannelAInterrupt.asyncNotifications(TRUE);
+            TimerIntEnable(call CC26xxTimer.base(), TIMER_CAPA_MATCH);
+
+        } else {
+            call ChannelBInterrupt.asyncNotifications(TRUE);
+            TimerIntEnable(call CC26xxTimer.base(), TIMER_CAPB_MATCH);
+        }
+
         TimerEnable(call CC26xxTimer.base(), which);
 
-        if (!running)
-            call Timer.startWithTimeoutFromNow(pollingInterval);
 
         atomic running |= which;
 
@@ -154,10 +172,14 @@ implementation {
     error_t stop(uint32_t which) {
         readValue(which); // for caching current value
         atomic running &= ~which;
-        if (!running)
-            call Timer.stop();
 
         TimerDisable(call CC26xxTimer.base(), which);
+
+        if (which & TIMER_A) {
+            call ChannelAInterrupt.asyncNotifications(FALSE);
+        } else {
+            call ChannelBInterrupt.asyncNotifications(FALSE);
+        }
 
         if (which & TIMER_A)
             pinDisable(call PinA.IOId(), TIMER_A);
@@ -170,12 +192,20 @@ implementation {
         return SUCCESS;
     }
 
-    event void Timer.fired() {
-        call Timer.startWithTimeoutFromLastTrigger(pollingInterval);
-        if (running & TIMER_A)
-            readValue(TIMER_A);
-        if (running & TIMER_B)
-            readValue(TIMER_B);
+    event async void ChannelAInterrupt.triggered() {
+        atomic {
+            call ChannelAInterrupt.clearPending();
+            TimerIntClear(call CC26xxTimer.base(), TIMER_CAPA_MATCH);
+            overflows[getCntIdx(TIMER_A)] += MAX_COUNT;
+        }
+    }
+
+    event async void ChannelBInterrupt.triggered() {
+        atomic {
+            call ChannelBInterrupt.clearPending();
+            TimerIntClear(call CC26xxTimer.base(), TIMER_CAPB_MATCH);
+            overflows[getCntIdx(TIMER_B)] += MAX_COUNT;
+        }
     }
 
     command error_t EvCntA.start() {

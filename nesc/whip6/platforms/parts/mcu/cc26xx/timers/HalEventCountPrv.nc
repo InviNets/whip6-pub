@@ -197,16 +197,16 @@ implementation {
 
     event async void ChannelAInterrupt.triggered() {
         atomic {
-            call ChannelAInterrupt.clearPending();
             TimerIntClear(call CC26xxTimer.base(), TIMER_CAPA_MATCH);
+            call ChannelAInterrupt.clearPending();
             overflows[getCntIdx(TIMER_A)] += UL_MAX_COUNT;
         }
     }
 
     event async void ChannelBInterrupt.triggered() {
         atomic {
-            call ChannelBInterrupt.clearPending();
             TimerIntClear(call CC26xxTimer.base(), TIMER_CAPB_MATCH);
+            call ChannelBInterrupt.clearPending();
             overflows[getCntIdx(TIMER_B)] += UL_MAX_COUNT;
         }
     }

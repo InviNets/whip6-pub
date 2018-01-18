@@ -22,6 +22,7 @@ interface InterruptSource {
     async command void enable();
     async command void disable();
     async command void clearPending();
+    async command bool getPending();
 
     /**
      * Notifies about occurrence of a low level interrupt.

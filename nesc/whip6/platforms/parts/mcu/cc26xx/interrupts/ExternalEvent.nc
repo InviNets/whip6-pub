@@ -50,4 +50,6 @@ interface ExternalEvent {
      * being triggered.
      */
     async command void clearPending();
+
+    async command bool getPending();
 }

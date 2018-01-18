@@ -37,6 +37,7 @@ implementation {
         inline async command void IFACE.enable() { IntEnable(N); } \
         inline async command void IFACE.disable() { IntDisable(N); } \
         inline async command void IFACE.clearPending() { IntPendClear(N); } \
+        inline async command bool IFACE.getPending() { return IntPendGet(N); } \
         inline default async event void IFACE.interruptFired() { spurious_interrupt(N); }
     #include "CC26xxIntSources.h"
     #undef INT

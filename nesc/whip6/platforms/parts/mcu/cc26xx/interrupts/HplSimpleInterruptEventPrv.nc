@@ -31,6 +31,10 @@ implementation{
         call InterruptSource.clearPending();
     }
 
+    async command bool ExternalEvent.getPending() {
+        return call InterruptSource.getPending();
+    }
+
     async event void InterruptSource.interruptFired() {
         signal ExternalEvent.triggered();
     }

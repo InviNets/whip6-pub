@@ -16,5 +16,5 @@ implementation {
     EventCount = EvCnt.EvCntA;
 
     components CC26xxPinsPub as Pins;
-    EvCnt.PinA -> Pins.DIO10;
+    EvCnt.PinA -> Pins.DIO5;
 }

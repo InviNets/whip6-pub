@@ -10,7 +10,7 @@
 # This file is distributed under the terms in the attached LICENSE
 # files.
 #
-board: cherry-v2
+board: cherry-v3
 
 dependencies:
   - platforms/boards/cc26xxbased

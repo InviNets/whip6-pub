@@ -1,0 +1,30 @@
+*How to use SC UART (fast / non-blocking printf) on cc2650dk.*
+
+SC UART is not a default option for cc2650dk
+because it requires using a UART–USB dongle.
+
+
+* Enabling it:
+Add
+```
+define:
+- PLATFORM_PRINTF_OVER_SC_UART
+```
+to build.spec of your app.
+
+
+* Connecting a dongle:
+1. Remove from SmartRF06 Evaluation Board a jumper that connects pins:
+   BTN_R, BTN_L, LED_3, LED_4.
+   This is the jumper that is the closest to a POWER switch.
+2. Connect (using a wire) LED_3 pin on the board with RXD pin on the dongle.
+3. Connect (using a wire) LED_4 pin on the board with TXD pin on the dongle.
+4. Connect the dongle to a computer.
+5. Use it.
+   Speed: 230400
+   It should appear as /dev/ttyUSB<number>.
+   You can use e.g.:
+	 miniterm.py /dev/ttyUSB5 230400
+
+
+Full-UART works as before.

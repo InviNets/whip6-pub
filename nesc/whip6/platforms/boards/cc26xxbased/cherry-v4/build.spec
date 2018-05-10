@@ -10,11 +10,11 @@
 # This file is distributed under the terms in the attached LICENSE
 # files.
 #
-board: cherry-v3
+board: cherry-v4
 
 dependencies:
   - platforms/boards/cc26xxbased
-  - platforms/boards/cc26xxbased/cherry-v3/scif_uart
+  - platforms/boards/cc26xxbased/cherry-v4/scif_uart
   - platforms/parts/sensor
   - lib/io/i2c
   - lib/io/leds

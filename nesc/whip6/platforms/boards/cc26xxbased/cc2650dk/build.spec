@@ -4,7 +4,7 @@
 # Copyright (c) 2012-2017 Szymon Acedanski
 # All rights reserved.
 #
-# This file is distributed under the terms in the attached LICENSE     
+# This file is distributed under the terms in the attached LICENSE
 # files.
 #
 board: cc2650dk
@@ -12,6 +12,7 @@ board: cc2650dk
 dependencies:
   - platforms/boards/cc26xxbased
   - platforms/boards/cc26xxbased/cc2650dk/private
+  - platforms/boards/cc26xxbased/cc2650dk/scif_uart # see README in ./scif_uart/
   - platforms/parts/memory/sdcard
   - lib/io/leds
   - lib/io/buttons

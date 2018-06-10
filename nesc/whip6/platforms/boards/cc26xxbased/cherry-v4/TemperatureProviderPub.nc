@@ -11,7 +11,6 @@
 #include "DimensionTypes.h"
 #include <CC26xxPinConfig.h>
 
-
 generic configuration TemperatureProviderPub() {
     provides interface DimensionalRead<TDeciCelsius, int16_t> as ReadTemp;
 }
@@ -21,13 +20,13 @@ implementation {
     components new PlatformI2CPub(50);
     components new TemperatureReaderOnOffSwitch();
 
-  	components BoardStartupPub;
-  	BoardStartupPub.InitSequence[3] -> TemperatureReaderOnOffSwitch.Init;
+    components BoardStartupPub;
+    BoardStartupPub.InitSequence[3] -> TemperatureReaderOnOffSwitch.Init;
 
-	components CC26xxPinsPub as Pins;
-	components new HalIOPinPub(OUTPUT_LOW) as IOPin;
-	IOPin.CC26xxPin -> Pins.DIO6;
-	TemperatureReaderOnOffSwitch.IOPin -> IOPin;
+    components CC26xxPinsPub as Pins;
+    components new HalIOPinPub(OUTPUT_LOW) as IOPin;
+    IOPin.CC26xxPin -> Pins.DIO6;
+    TemperatureReaderOnOffSwitch.IOPin -> IOPin;
 
     Reader.I2CPacket -> PlatformI2CPub;
     Reader.OnOffSwitch -> TemperatureReaderOnOffSwitch;

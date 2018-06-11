@@ -21,6 +21,7 @@ generic module TemperatureReaderOnOffSwitch() {
 implementation {
     command error_t Init.init() {
         call IOPin.makeOutput();
+        call IOPin.setLow();
         return SUCCESS;
     }
 

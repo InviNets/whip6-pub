@@ -10,6 +10,7 @@
 
 #include "string.h"
 #include "common.h"
+#define QUEUE_SIZE 10
 
 module CherryMoteHWTestRadioServerPrv {
     uses interface Boot;
@@ -18,10 +19,16 @@ module CherryMoteHWTestRadioServerPrv {
     uses interface RawFrame;
     uses interface RawFrameSender as LowFrameSender;
     uses interface RawFrameReceiver as LowFrameReceiver;
+    uses interface LocalIeeeEui64Provider;
 }
 
 implementation {
     platform_frame_t txFr, rxFr;
+
+    uint8_t addrQueue[QUEUE_SIZE][IEEE_EUI64_BYTE_LENGTH];
+
+    int qHead = 0;
+    int qTail = 0;
 
     task void sendResp();
 
@@ -36,8 +43,16 @@ implementation {
         if (status == SUCCESS) {
             if (FRAME_LENGTH == call RawFrame.getLength(&rxFr)) {
                 uint8_t *data = call RawFrame.getData(&rxFr);
-                if (memcmp(QUERY, (const char*)data, strlen(QUERY)) == 0)
-                    shouldSend = 1;
+                int queryLen = strlen(QUERY);
+                if (memcmp(QUERY, (const char*)data, queryLen) == 0) {
+                    if ((qHead + 1) % QUEUE_SIZE != qTail) {
+                        memcpy(addrQueue[qHead], &data[queryLen], IEEE_EUI64_BYTE_LENGTH);
+                        qHead = (qHead + 1) % QUEUE_SIZE;
+                        shouldSend = 1;
+                    }
+                    else
+                        printf("Response queue full\n");
+                }
             }
         }
         else
@@ -60,11 +75,18 @@ implementation {
 
     task void sendResp() {
         uint8_t *data;
-        call RawFrame.setLength(&txFr, FRAME_LENGTH);
 
-        data = call RawFrame.getData(&txFr);
-        snprintf((char*)data, MAX_DATA_FRAME_LEN, "%s", RESP);
+        if (qHead != qTail) {
+            call RawFrame.setLength(&txFr, FRAME_LENGTH);
 
-        call LowFrameSender.startSending(&txFr);
+            data = call RawFrame.getData(&txFr);
+            snprintf((char*)data, MAX_DATA_FRAME_LEN, "%s", RESP);
+            memcpy((char*)&data[strlen(RESP)], addrQueue[qTail], IEEE_EUI64_BYTE_LENGTH);
+            qTail = (qTail + 1) % QUEUE_SIZE;
+
+            call LowFrameSender.startSending(&txFr);
+        }
+        else
+            printf("No response in the queue to send\n");
     }
 }

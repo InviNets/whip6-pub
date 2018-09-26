@@ -15,6 +15,7 @@ module CherryMoteHWTestPrv {
     uses interface DimensionalRead<TDeciCelsius, int16_t> as ReadTemp;
     uses interface Timer<TMilli, uint32_t>;
     uses interface EventCount<uint64_t> as ICount;
+    uses interface LocalIeeeEui64Provider as Eui64Provider;
 
     uses interface Init as LowInit;
     uses interface RawFrame;
@@ -29,6 +30,7 @@ implementation {
     uint8_t buffer[BUFFER_SIZE];
     char cbuffer[CBUFFER_SIZE];
     platform_frame_t txFr, rxFr;
+    ieee_eui64_t eui64;
 
     event void Boot.booted() {
         call Led.off();
@@ -83,6 +85,8 @@ implementation {
 
                 data = call RawFrame.getData(&txFr);
                 snprintf((char*)data, MAX_DATA_FRAME_LEN, "%s", QUERY);
+                call Eui64Provider.read(&eui64);
+                memcpy(&data[strlen(QUERY)], eui64.data, IEEE_EUI64_BYTE_LENGTH);
 
                 result = call LowFrameSender.startSending(&txFr);
                 if (result != SUCCESS)
@@ -133,15 +137,27 @@ implementation {
             call BufferedRead.startRead(buffer, cmd_size);
     }
 
+
     event void LowFrameReceiver.receivingFinished(platform_frame_t *fp, error_t status) {
         int res = 0;
-
         if (status == SUCCESS) {
             if (FRAME_LENGTH == call RawFrame.getLength(&rxFr)) {
                 uint8_t *data = call RawFrame.getData(&rxFr);
-
-                if (memcmp(RESP, (const char*)data, strlen(RESP)) == 0)
-                    res = 1;
+                int respLen = strlen(RESP);
+                if (memcmp(RESP, (const char*)data, respLen) == 0) {
+                    if (memcmp(eui64.data, (const char*)&data[respLen], IEEE_EUI64_BYTE_LENGTH) == 0) {
+                        res = 1;
+                    }
+                    else {
+                        // Someone else's echo received, try again
+                        result = call LowFrameReceiver.startReceiving(&rxFr);
+                        return;
+                    }
+                }
+                else {
+                    result = call LowFrameReceiver.startReceiving(&rxFr);
+                    return;
+                }
             }
         }
         else

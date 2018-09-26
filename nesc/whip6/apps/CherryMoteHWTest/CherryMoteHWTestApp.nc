@@ -11,6 +11,9 @@ implementation {
     components BoardStartupPub, CherryMoteHWTestPrv;
     CherryMoteHWTestPrv.Boot -> BoardStartupPub;
 
+    components LocalIeeeEui64ProviderPub;
+    CherryMoteHWTestPrv.Eui64Provider -> LocalIeeeEui64ProviderPub;
+
     components BlockingUART0Pub;
     components new BufferedReaderPub(128) as Reader;
     components new BufferedWriterPub() as Writer;

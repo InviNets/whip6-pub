@@ -33,5 +33,5 @@ interface ProductionModeControl
      *         EALREADY, if the device was in the given mode already,
      *         appropriate error value otherwise.
      */
-    command error_t setProductionMode(bool flag);
+    command error_t setProductionMode(bool value);
 }

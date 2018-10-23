@@ -4,7 +4,7 @@
  * Copyright (c) 2012-2017 Szymon Acedanski
  * All rights reserved.
  *
- * This file is distributed under the terms in the attached LICENSE     
+ * This file is distributed under the terms in the attached LICENSE
  * files.
  */
 
@@ -15,6 +15,11 @@
 
 #ifndef FLOG_H
 #define FLOG_H
+
+/* These must be defined in a linker script and point to a sector-aligned flash
+ * region. */
+extern uint8_t _flog;
+extern uint8_t _eflog;
 
 void flog_clear(void);
 void flog_dump(void (*putc)(char c));

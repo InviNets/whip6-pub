@@ -17,7 +17,7 @@ LIBRARIES += -lm
 
 all: $(TARGET).hex $(TARGET).nobl.dfu.bin $(TARGET).nobl.lst \
 	$(TARGET).nobl.sym $(TARGET).nobl.flash.sizes $(TARGET).nobl.ram.sizes \
-	$(TARGET).workingcopy.hex .release-images
+	$(TARGET).workingcopy.hex $(TARGET).flash .release-images
 
 .release-images: $(TARGET).nobl.dfu.bin $(TARGET).hex
 	@printf "$(APP_NAME)-`LC_ALL=C date +%Y%m%d`-" >> $(TARGET).release-version.txt
@@ -108,3 +108,6 @@ $(TARGET).workingcopy.o: $(TARGET).workingcopy.c
 
 %.ram.sizes: %.elf
 	$(NM) -f posix $< | $(SYMBOLS2SIZES) -k ram $@
+
+%.flash: %.nobl.elf
+	$(OBJCOPY) $(OBJCOPY_FLAGS) $< $@

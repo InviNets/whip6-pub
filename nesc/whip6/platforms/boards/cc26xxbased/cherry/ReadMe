@@ -1,0 +1,4 @@
+The `cherry` board is the newest `cherry-v*` board.
+Currently: cherry-v5
+
+When you add a new version of cherry board, update also symlinks here.

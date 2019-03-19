@@ -15,3 +15,4 @@ boards:
  - cherry-v2
  - cherry-v4
  - cherry-v5
+ - cherry

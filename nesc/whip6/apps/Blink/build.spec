@@ -24,5 +24,6 @@ boards:
  - cherry-v2
  - cherry-v4
  - cherry-v5
+ - cherry
  - maps1
 build dir: $(SPEC_DIR)/build/$(BOARD)

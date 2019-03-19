@@ -15,6 +15,9 @@ implementation {
     components BoardStartupPub, CherryMoteHWTestRadioServerPrv;
     CherryMoteHWTestRadioServerPrv.Boot -> BoardStartupPub;
 
+    components LocalIeeeEui64ProviderPub;
+    CherryMoteHWTestRadioServerPrv.LocalIeeeEui64Provider -> LocalIeeeEui64ProviderPub;
+
     components CoreRawRadioPub;
     CherryMoteHWTestRadioServerPrv.LowInit -> CoreRawRadioPub;
     CherryMoteHWTestRadioServerPrv.RawFrame -> CoreRawRadioPub;

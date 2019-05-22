@@ -17,5 +17,6 @@ boards:
  - fedo
  - hyboard
  - cc2650dk
+ - cherry-v4
 
 build dir: $(SPEC_DIR)/build/$(BOARD)

@@ -114,7 +114,7 @@ ResetISR (void)
     //
     // Final trim of device
     //
-    trimDevice();
+    SetupTrimDevice();
 
     //
     // Copy the data segment initializers from flash to SRAM.

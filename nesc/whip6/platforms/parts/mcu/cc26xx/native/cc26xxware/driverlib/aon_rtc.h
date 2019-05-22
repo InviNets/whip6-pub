@@ -1,11 +1,11 @@
 /******************************************************************************
 *  Filename:       aon_rtc.h
-*  Revised:        2015-07-16 12:12:04 +0200 (Thu, 16 Jul 2015)
-*  Revision:       44151
+*  Revised:        2016-08-15 13:37:26 +0200 (Mon, 15 Aug 2016)
+*  Revision:       47015
 *
 *  Description:    Defines and prototypes for the AON RTC
 *
-*  Copyright (c) 2015, Texas Instruments Incorporated
+*  Copyright (c) 2015 - 2016, Texas Instruments Incorporated
 *  All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without
@@ -133,6 +133,22 @@ extern "C"
 //*****************************************************************************
 #define AON_RTC_MODE_CH2_CONTINUOUS    1 // Continuous mode
 #define AON_RTC_MODE_CH2_NORMALCOMPARE 0 // Normal compare mode
+
+//*****************************************************************************
+//
+// Mutliplication factor for converting from seconds to corresponding time in
+// the "CompareValue" format.
+// The factor correspond to the compare value format described in the registers
+//   \ref AON_RTC_O_CH0CMP, \ref AON_RTC_O_CH1CMP and \ref AON_RTC_O_CH2CMP.
+// Example1:
+//   4 milliseconds in CompareValue format can be written like this:
+//   ((uint32_t)( 0.004 * FACTOR_SEC_TO_COMP_VAL_FORMAT ))
+// Example2:
+//   4 seconds in CompareValue format can be written like this:
+//   ( 4 * FACTOR_SEC_TO_COMP_VAL_FORMAT )
+//
+//*****************************************************************************
+#define FACTOR_SEC_TO_COMP_VAL_FORMAT   0x00010000
 
 //*****************************************************************************
 //
@@ -368,17 +384,17 @@ AONRTCEventClear(uint32_t ui32Channel)
 
     if(ui32Channel & AON_RTC_CH0)
     {
-        HWREGBITW(AON_RTC_BASE + AON_RTC_O_EVFLAGS, AON_RTC_EVFLAGS_CH0_BITN) = 1;
+        HWREG(AON_RTC_BASE + AON_RTC_O_EVFLAGS) = AON_RTC_EVFLAGS_CH0;
     }
 
     if(ui32Channel & AON_RTC_CH1)
     {
-        HWREGBITW(AON_RTC_BASE + AON_RTC_O_EVFLAGS, AON_RTC_EVFLAGS_CH1_BITN) = 1;
+        HWREG(AON_RTC_BASE + AON_RTC_O_EVFLAGS) = AON_RTC_EVFLAGS_CH1;
     }
 
     if(ui32Channel & AON_RTC_CH2)
     {
-        HWREGBITW(AON_RTC_BASE + AON_RTC_O_EVFLAGS, AON_RTC_EVFLAGS_CH2_BITN) = 1;
+        HWREG(AON_RTC_BASE + AON_RTC_O_EVFLAGS) = AON_RTC_EVFLAGS_CH2;
     }
 }
 

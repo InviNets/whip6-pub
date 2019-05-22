@@ -1,3 +1,2 @@
-COMPILER_TOOL = "/cygdrive/c/ti/ccsv6/tools/compiler/gcc-arm-none-eabi-4_8-2014q3/bin/arm-none-eabi-gcc"
-COMPILER_INCL = "/cygdrive/c/ti/ccsv6/tools/compiler/gcc-arm-none-eabi-4_8-2014q3/lib/gcc/arm-none-eabi/4.8.4/include"
-ARCHIVER_TOOL = "/cygdrive/c/ti/ccsv6/tools/compiler/gcc-arm-none-eabi-4_8-2014q3/bin/arm-none-eabi-ar"
+COMPILER_TOOL = "/cygdrive/c/ti/CCS6.2.0.00019_win32-beta2/ccsv6/tools/compiler/gcc-arm-none-eabi-4_9-2015q3/bin/arm-none-eabi-gcc"
+ARCHIVER_TOOL = "/cygdrive/c/ti/CCS6.2.0.00019_win32-beta2/ccsv6/tools/compiler/gcc-arm-none-eabi-4_9-2015q3/bin/arm-none-eabi-ar"

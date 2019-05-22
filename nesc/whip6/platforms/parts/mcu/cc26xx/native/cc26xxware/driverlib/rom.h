@@ -1,11 +1,11 @@
 /******************************************************************************
 *  Filename:       rom.h
-*  Revised:        2015-11-11 14:08:23 +0100 (Wed, 11 Nov 2015)
-*  Revision:       45027
+*  Revised:        2016-06-30 09:21:03 +0200 (Thu, 30 Jun 2016)
+*  Revision:       46799
 *
 *  Description:    Prototypes for the ROM utility functions.
 *
-*  Copyright (c) 2015, Texas Instruments Incorporated
+*  Copyright (c) 2015 - 2016, Texas Instruments Incorporated
 *  All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without
@@ -150,6 +150,7 @@ typedef struct
 //
 // Add wrapper around the Hapi functions needing the "bus arbitration issue" workaround
 //
+extern void SafeHapiVoid( FPTR_VOID_VOID_T fPtr );
 extern void SafeHapiAuxAdiSelect( FPTR_VOID_UINT8_T fPtr, uint8_t ut8Signal );
 
 #define HapiCrc32(a,b,c)             P_HARD_API->Crc32(a,b,c)
@@ -163,7 +164,7 @@ extern void SafeHapiAuxAdiSelect( FPTR_VOID_UINT8_T fPtr, uint8_t ut8Signal );
 #define HapiMaxValue(a,b)            P_HARD_API->MaxValue(a,b)
 #define HapiMeanValue(a,b)           P_HARD_API->MeanValue(a,b)
 #define HapiStandDeviationValue(a,b) P_HARD_API->StandDeviationValue(a,b)
-#define HapiHFSourceSafeSwitch()     P_HARD_API->HFSourceSafeSwitch()
+#define HapiHFSourceSafeSwitch()     SafeHapiVoid( P_HARD_API->HFSourceSafeSwitch )
 #define HapiSelectCompAInput(a)      SafeHapiAuxAdiSelect( P_HARD_API->SelectCompAInput   , a )
 #define HapiSelectCompARef(a)        SafeHapiAuxAdiSelect( P_HARD_API->SelectCompARef     , a )
 #define HapiSelectADCCompBInput(a)   SafeHapiAuxAdiSelect( P_HARD_API->SelectADCCompBInput, a )
@@ -253,7 +254,6 @@ extern void SafeHapiAuxAdiSelect( FPTR_VOID_UINT8_T fPtr, uint8_t ut8Signal );
 #define ROM_API_IOC_TABLE       ((uint32_t*) (ROM_API_TABLE[13]))
 #define ROM_API_PRCM_TABLE      ((uint32_t*) (ROM_API_TABLE[14]))
 #define ROM_API_SMPH_TABLE      ((uint32_t*) (ROM_API_TABLE[15]))
-#define ROM_API_SPIS_TABLE      ((uint32_t*) (ROM_API_TABLE[16]))
 #define ROM_API_SSI_TABLE       ((uint32_t*) (ROM_API_TABLE[17]))
 #define ROM_API_TIMER_TABLE     ((uint32_t*) (ROM_API_TABLE[18]))
 #define ROM_API_TRNG_TABLE      ((uint32_t*) (ROM_API_TABLE[19]))
@@ -309,28 +309,6 @@ extern void SafeHapiAuxAdiSelect( FPTR_VOID_UINT8_T fPtr, uint8_t ut8Signal );
 #define ROM_AUXTDCMeasurementDone \
     ((uint32_t (*)(uint32_t ui32Base)) \
     ROM_API_AUX_TDC_TABLE[1])
-
-
-// AUX_TIMER FUNCTIONS
-#define ROM_AUXTimerConfigure \
-    ((void (*)(uint32_t ui32Timer, uint32_t ui32Config)) \
-    ROM_API_AUX_TIMER_TABLE[0])
-
-#define ROM_AUXTimerStart \
-    ((void (*)(uint32_t ui32Timer)) \
-    ROM_API_AUX_TIMER_TABLE[1])
-
-#define ROM_AUXTimerStop \
-    ((void (*)(uint32_t ui32Timer)) \
-    ROM_API_AUX_TIMER_TABLE[2])
-
-#define ROM_AUXTimerPrescaleSet \
-    ((void (*)(uint32_t ui32Timer, uint32_t ui32PrescaleDiv)) \
-    ROM_API_AUX_TIMER_TABLE[3])
-
-#define ROM_AUXTimerPrescaleGet \
-    ((uint32_t (*)(uint32_t ui32Timer)) \
-    ROM_API_AUX_TIMER_TABLE[4])
 
 
 // AUX_WUC FUNCTIONS

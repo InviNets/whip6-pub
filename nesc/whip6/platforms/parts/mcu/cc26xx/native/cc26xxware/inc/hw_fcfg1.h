@@ -1,9 +1,9 @@
 /******************************************************************************
 *  Filename:       hw_fcfg1_h
-*  Revised:        2015-11-17 15:22:29 +0100 (Tue, 17 Nov 2015)
-*  Revision:       45119
+*  Revised:        2016-06-16 09:00:03 +0200 (Thu, 16 Jun 2016)
+*  Revision:       46679
 *
- * Copyright (c) 2015, Texas Instruments Incorporated
+* Copyright (c) 2015 - 2016, Texas Instruments Incorporated
 * All rights reserved.
 *
 * Redistribution and use in source and binary forms, with or without
@@ -170,6 +170,9 @@
 // Internal
 #define FCFG1_O_LDO_TRIM                                            0x000002B8
 
+// Internal
+#define FCFG1_O_BAT_RC_LDO_TRIM                                     0x000002BC
+
 // MAC BLE Address 0
 #define FCFG1_O_MAC_BLE_0                                           0x000002E8
 
@@ -190,6 +193,9 @@
 
 // Internal
 #define FCFG1_O_RCOSC_HF_TEMPCOMP                                   0x00000310
+
+// Internal
+#define FCFG1_O_TRIM_CAL_REVISION                                   0x00000314
 
 // IcePick Device Identification
 #define FCFG1_O_ICEPICK_DEVICE_ID                                   0x00000318
@@ -1587,6 +1593,39 @@
 
 //*****************************************************************************
 //
+// Register: FCFG1_O_BAT_RC_LDO_TRIM
+//
+//*****************************************************************************
+// Field: [27:24] VTRIM_BOD
+//
+// Internal. Only to be used through TI provided API.
+#define FCFG1_BAT_RC_LDO_TRIM_VTRIM_BOD_W                                    4
+#define FCFG1_BAT_RC_LDO_TRIM_VTRIM_BOD_M                           0x0F000000
+#define FCFG1_BAT_RC_LDO_TRIM_VTRIM_BOD_S                                   24
+
+// Field: [19:16] VTRIM_UDIG
+//
+// Internal. Only to be used through TI provided API.
+#define FCFG1_BAT_RC_LDO_TRIM_VTRIM_UDIG_W                                   4
+#define FCFG1_BAT_RC_LDO_TRIM_VTRIM_UDIG_M                          0x000F0000
+#define FCFG1_BAT_RC_LDO_TRIM_VTRIM_UDIG_S                                  16
+
+// Field:  [11:8] RCOSCHF_ITUNE_TRIM
+//
+// Internal. Only to be used through TI provided API.
+#define FCFG1_BAT_RC_LDO_TRIM_RCOSCHF_ITUNE_TRIM_W                           4
+#define FCFG1_BAT_RC_LDO_TRIM_RCOSCHF_ITUNE_TRIM_M                  0x00000F00
+#define FCFG1_BAT_RC_LDO_TRIM_RCOSCHF_ITUNE_TRIM_S                           8
+
+// Field:   [1:0] MEASUREPER
+//
+// Internal. Only to be used through TI provided API.
+#define FCFG1_BAT_RC_LDO_TRIM_MEASUREPER_W                                   2
+#define FCFG1_BAT_RC_LDO_TRIM_MEASUREPER_M                          0x00000003
+#define FCFG1_BAT_RC_LDO_TRIM_MEASUREPER_S                                   0
+
+//*****************************************************************************
+//
 // Register: FCFG1_O_MAC_BLE_0
 //
 //*****************************************************************************
@@ -1838,6 +1877,25 @@
 
 //*****************************************************************************
 //
+// Register: FCFG1_O_TRIM_CAL_REVISION
+//
+//*****************************************************************************
+// Field: [31:16] FT1
+//
+// Internal. Only to be used through TI provided API.
+#define FCFG1_TRIM_CAL_REVISION_FT1_W                                       16
+#define FCFG1_TRIM_CAL_REVISION_FT1_M                               0xFFFF0000
+#define FCFG1_TRIM_CAL_REVISION_FT1_S                                       16
+
+// Field:  [15:0] MP1
+//
+// Internal. Only to be used through TI provided API.
+#define FCFG1_TRIM_CAL_REVISION_MP1_W                                       16
+#define FCFG1_TRIM_CAL_REVISION_MP1_M                               0x0000FFFF
+#define FCFG1_TRIM_CAL_REVISION_MP1_S                                        0
+
+//*****************************************************************************
+//
 // Register: FCFG1_O_ICEPICK_DEVICE_ID
 //
 //*****************************************************************************
@@ -1937,7 +1995,7 @@
 //*****************************************************************************
 // Field:   [6:0] GPIO_CNT
 //
-// This value is written to IOC:CFG.GPIO_CNT by boot FW while in safezone.
+// Number of available DIOs.
 #define FCFG1_IOCONF_GPIO_CNT_W                                              7
 #define FCFG1_IOCONF_GPIO_CNT_M                                     0x0000007F
 #define FCFG1_IOCONF_GPIO_CNT_S                                              0

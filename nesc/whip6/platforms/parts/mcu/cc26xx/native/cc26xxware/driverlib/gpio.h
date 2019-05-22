@@ -1,11 +1,11 @@
 /******************************************************************************
 *  Filename:       gpio.h
-*  Revised:        2015-11-19 16:24:40 +0100 (Thu, 19 Nov 2015)
-*  Revision:       45170
+*  Revised:        2016-06-30 09:21:03 +0200 (Thu, 30 Jun 2016)
+*  Revision:       46799
 *
 *  Description:    Defines and prototypes for the GPIO.
 *
-*  Copyright (c) 2015, Texas Instruments Incorporated
+*  Copyright (c) 2015 - 2016, Texas Instruments Incorporated
 *  All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without
@@ -71,12 +71,26 @@ extern "C"
 //
 //*****************************************************************************
 #ifdef DRIVERLIB_DEBUG
+#include <inc/hw_fcfg1.h>
+#include <driverlib/chipinfo.h>
+
 static bool
 dioNumberLegal( uint32_t dioNumber )
 {
-    return ( dioNumber < (( HWREG( FCFG_BASE + FCFG1_O_IOCONF ) &
-        FCFG1_IOCONF_GPIO_CNT_M ) >>
-        FCFG1_IOCONF_GPIO_CNT_S ) );
+    uint32_t ioCount =
+        (( HWREG( FCFG1_BASE + FCFG1_O_IOCONF ) &
+            FCFG1_IOCONF_GPIO_CNT_M ) >>
+            FCFG1_IOCONF_GPIO_CNT_S ) ;
+
+    //
+    // Special handling of CC13xx 7x7, where IO_CNT = 30 and legal range is 1..30
+    // for all other chips legal range is 0..(dioNumber-1)
+    //
+    if (( ioCount == 30 ) && ChipInfo_ChipFamilyIsCC13xx() ) {
+        return (( dioNumber > 0 ) && ( dioNumber <= ioCount ));
+    } else {
+        return ( dioNumber < ioCount );
+    }
 }
 #endif
 

@@ -1,11 +1,11 @@
 /******************************************************************************
 *  Filename:       trng.h
-*  Revised:        2015-11-16 19:41:47 +0100 (Mon, 16 Nov 2015)
-*  Revision:       45094
+*  Revised:        2016-06-30 09:21:03 +0200 (Thu, 30 Jun 2016)
+*  Revision:       46799
 *
 *  Description:    Defines and prototypes for the true random number gen.
 *
-*  Copyright (c) 2015, Texas Instruments Incorporated
+*  Copyright (c) 2015 - 2016, Texas Instruments Incorporated
 *  All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without

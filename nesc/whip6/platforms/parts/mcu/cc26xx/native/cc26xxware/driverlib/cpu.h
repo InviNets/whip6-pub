@@ -1,12 +1,12 @@
 /******************************************************************************
 *  Filename:       cpu.h
-*  Revised:        2015-10-28 15:51:56 +0100 (Wed, 28 Oct 2015)
-*  Revision:       44872
+*  Revised:        2016-06-30 09:21:03 +0200 (Thu, 30 Jun 2016)
+*  Revision:       46799
 *
 *  Description:    Defines and prototypes for the CPU instruction wrapper
 *                  functions.
 *
-*  Copyright (c) 2015, Texas Instruments Incorporated
+*  Copyright (c) 2015 - 2016, Texas Instruments Incorporated
 *  All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without
@@ -141,7 +141,7 @@ extern uint32_t CPUcpsie(void);
 //! \return None
 //
 //*****************************************************************************
-#if defined(__IAR_SYSTEMS_ICC__) || defined(DOXYGEN)
+#if defined(__IAR_SYSTEMS_ICC__)
 __STATIC_INLINE void
 CPUwfi(void)
 {
@@ -160,7 +160,7 @@ CPUwfi(void)
     wfi;
     bx      lr
 }
-#elif defined(__TI_COMPILER_VERSION__)
+#elif defined(__TI_COMPILER_VERSION__) || defined(DOXYGEN)
 __STATIC_INLINE void
 CPUwfi(void)
 {
@@ -190,7 +190,7 @@ CPUwfi(void)
 //! \return None
 //
 //*****************************************************************************
-#if defined(__IAR_SYSTEMS_ICC__) || defined(DOXYGEN)
+#if defined(__IAR_SYSTEMS_ICC__)
 __STATIC_INLINE void
 CPUwfe(void)
 {
@@ -209,7 +209,7 @@ CPUwfe(void)
     wfe;
     bx      lr
 }
-#elif defined(__TI_COMPILER_VERSION__)
+#elif defined(__TI_COMPILER_VERSION__) || defined(DOXYGEN)
 __STATIC_INLINE void
 CPUwfe(void)
 {
@@ -239,7 +239,7 @@ CPUwfe(void)
 //! \return None
 //
 //*****************************************************************************
-#if defined(__IAR_SYSTEMS_ICC__) || defined(DOXYGEN)
+#if defined(__IAR_SYSTEMS_ICC__)
 __STATIC_INLINE void
 CPUsev(void)
 {
@@ -258,7 +258,7 @@ CPUsev(void)
     sev;
     bx      lr
 }
-#elif defined(__TI_COMPILER_VERSION__)
+#elif defined(__TI_COMPILER_VERSION__) || defined(DOXYGEN)
 __STATIC_INLINE void
 CPUsev(void)
 {
@@ -291,7 +291,7 @@ CPUsev(void)
 //! \return None
 //
 //*****************************************************************************
-#if defined(__IAR_SYSTEMS_ICC__) || defined(DOXYGEN)
+#if defined(__IAR_SYSTEMS_ICC__)
 __STATIC_INLINE void
 CPUbasepriSet(uint32_t ui32NewBasepri)
 {
@@ -310,7 +310,7 @@ CPUbasepriSet(uint32_t ui32NewBasepri)
     msr     BASEPRI, r0;
     bx      lr
 }
-#elif defined(__TI_COMPILER_VERSION__)
+#elif defined(__TI_COMPILER_VERSION__) || defined(DOXYGEN)
 __STATIC_INLINE void
 CPUbasepriSet(uint32_t ui32NewBasepri)
 {

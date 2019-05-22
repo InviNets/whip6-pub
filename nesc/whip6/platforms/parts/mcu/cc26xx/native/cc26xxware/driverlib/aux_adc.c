@@ -1,11 +1,11 @@
 /******************************************************************************
 *  Filename:       aux_adc.c
-*  Revised:        2015-10-14 18:23:25 +0200 (Wed, 14 Oct 2015)
-*  Revision:       44751
+*  Revised:        2016-07-07 19:12:02 +0200 (Thu, 07 Jul 2016)
+*  Revision:       46848
 *
 *  Description:    Driver for the AUX Time to Digital Converter interface.
 *
-*  Copyright (c) 2015, Texas Instruments Incorporated
+*  Copyright (c) 2015 - 2016, Texas Instruments Incorporated
 *  All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without

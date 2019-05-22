@@ -209,14 +209,14 @@ implementation {
     rfc_CMD_IEEE_TX_t __attribute__((aligned(4))) txCmd;
     platform_frame_t* txFrame = NULL;
 
-    rfCoreHal_CMD_BLE_ADV_NC_t __attribute__((aligned(4))) bleAdvCmd[BLE_ADV_NUM_CHANNELS];
-    rfCoreHal_bleAdvPar_t bleAdvParams;
+    rfc_CMD_BLE_ADV_NC_t __attribute__((aligned(4))) bleAdvCmd[BLE_ADV_NUM_CHANNELS];
+    rfc_bleAdvPar_t bleAdvParams;
     ble_address_t bleAddress;
     uint8_t* bleAdvPayload = NULL;
     uint8_t bleAdvPayloadLen;
 
-    rfCoreHal_CMD_BLE_SCANNER_t __attribute__((aligned(4))) bleScannerCmd;
-    rfCoreHal_bleScannerPar_t bleScannerParams;
+    rfc_CMD_BLE_SCANNER_t __attribute__((aligned(4))) bleScannerCmd;
+    rfc_bleScannerPar_t bleScannerParams;
     ble_frame_t bleScannerFrames[NUM_BLE_SCANNER_ENTRIES];
     rfc_dataEntryPointer_t bleScannerDataEntries[NUM_BLE_SCANNER_ENTRIES];
     rfc_dataEntryPointer_t* bleScannerCurrentEntry;
@@ -486,8 +486,8 @@ implementation {
 
     static void initBLEAdvCmd() {
         int i;
-        rfCoreHal_bleAdvPar_t* params = &bleAdvParams;
-        memset(params, 0x00, sizeof(rfCoreHal_bleAdvPar_t));
+        rfc_bleAdvPar_t* params = &bleAdvParams;
+        memset(params, 0x00, sizeof(rfc_bleAdvPar_t));
 
         /* Set up BLE Advertisement parameters */
         params->pDeviceAddress = (uint16_t *)bleAddress.bytes;
@@ -497,12 +497,12 @@ implementation {
         /* We construct a chain of commands for sending BLE advertisements
          * on all advertising channels. */
         for (i = 0; i < BLE_ADV_NUM_CHANNELS; i++) {
-            rfCoreHal_CMD_BLE_ADV_NC_t* cmd = &bleAdvCmd[i];
+            rfc_CMD_BLE_ADV_NC_t* cmd = &bleAdvCmd[i];
 
             call RFCore.initRadioOp((rfc_radioOp_t*)cmd,
-                    sizeof(rfCoreHal_CMD_BLE_ADV_NC_t), CMD_BLE_ADV_NC);
+                    sizeof(rfc_CMD_BLE_ADV_NC_t), CMD_BLE_ADV_NC);
 
-            cmd->pParams = (uint8_t*)params;
+            cmd->pParams = params;
             cmd->channel = BLE_ADV_FIRST_CHANNEL + i;
 
             if (i < BLE_ADV_NUM_CHANNELS - 1) {
@@ -510,7 +510,7 @@ implementation {
             }
 
             if (i > 0) {
-                bleAdvCmd[i - 1].pNextOp = (uint8_t*)cmd;
+                bleAdvCmd[i - 1].pNextOp = (rfc_radioOp_t *)cmd;
             }
         }
     }
@@ -534,12 +534,12 @@ implementation {
 
     static void initBLEScannerCmd() {
         int i;
-        rfCoreHal_CMD_BLE_SCANNER_t *cmd = &bleScannerCmd;
-        rfCoreHal_bleScannerPar_t* params = &bleScannerParams;
-        memset(params, 0x00, sizeof(rfCoreHal_bleScannerPar_t));
+        rfc_CMD_BLE_SCANNER_t *cmd = &bleScannerCmd;
+        rfc_bleScannerPar_t* params = &bleScannerParams;
+        memset(params, 0x00, sizeof(rfc_bleScannerPar_t));
 
         call RFCore.initRadioOp((rfc_radioOp_t*)cmd,
-                sizeof(rfCoreHal_CMD_BLE_SCANNER_t), CMD_BLE_SCANNER);
+                sizeof(rfc_CMD_BLE_SCANNER_t), CMD_BLE_SCANNER);
 
         cmd->status = RF_CORE_RADIO_OP_STATUS_IDLE;
         cmd->pNextOp = NULL;
@@ -547,7 +547,7 @@ implementation {
         cmd->startTrigger.triggerType = TRIG_NOW;
         cmd->condition.rule = COND_NEVER;
 
-        cmd->pParams = (uint8_t*)params;
+        cmd->pParams = params;
         cmd->channel = BLE_ADV_FIRST_CHANNEL;
 
         params->rxConfig.bAutoFlushCrcErr = 1;
@@ -683,10 +683,10 @@ out:
         call RFCore.initRadioOp((rfc_radioOp_t *)&cmd, sizeof(cmd),
                 CMD_RADIO_SETUP);
 
-        cmd.txPower.IB = txPowerConfig->register_ib;
-        cmd.txPower.GC = txPowerConfig->register_gc;
-        cmd.txPower.tempCoeff = txPowerConfig->temp_coeff;
-        cmd.txPower.boost = txPowerConfig->boost;
+        cmd.txPower = txPowerConfig->register_ib | 
+                        ((txPowerConfig->register_gc & 0x03) << 6) |
+                        ((uint16_t) (txPowerConfig->boost & 0x01) << 8) |
+                        ((uint16_t) (txPowerConfig->temp_coeff & 0x7f) << 9);
         cmd.pRegOverride = (uint32_t*)overrides;
         cmd.mode = mode;
 
@@ -908,7 +908,7 @@ out:
 
     static void startBLEAdvTX() {
         uint32_t cmd_status;
-        rfCoreHal_CMD_BLE_ADV_NC_t* cmd = &bleAdvCmd[0];
+        rfc_CMD_BLE_ADV_NC_t* cmd = &bleAdvCmd[0];
 
         bleAdvParams.advLen = bleAdvPayloadLen;
         bleAdvParams.pAdvData = bleAdvPayload;
@@ -929,7 +929,7 @@ out:
 
     static void startBLEScanner() {
         uint32_t cmd_status;
-        rfCoreHal_CMD_BLE_SCANNER_t* cmd = &bleScannerCmd;
+        rfc_CMD_BLE_SCANNER_t* cmd = &bleScannerCmd;
 
         error = SUCCESS;
         state = STATE_BLE_SCANNER;

@@ -1,11 +1,11 @@
 /******************************************************************************
 *  Filename:       rf_prop_mailbox.h
-*  Revised:        2015-06-29 12:59:58 +0200 (må, 29 jun 2015)
-*  Revision:       44063
+*  Revised:        $ $
+*  Revision:       $ $
 *
-*  Description:    Definitions for proprietary mode radio interface
+*  Description:    Definitions for probrietary mode radio interface
 *
-*  Copyright (c) 2015, Texas Instruments Incorporated
+*  Copyright (c) 2015 - 2016, Texas Instruments Incorporated
 *  All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without
@@ -36,8 +36,8 @@
 *
 ******************************************************************************/
 
-#ifndef __PROP_MAILBOX_H
-#define __PROP_MAILBOX_H
+#ifndef _PROP_MAILBOX_H
+#define _PROP_MAILBOX_H
 
 /// \name Radio operation status
 ///@{

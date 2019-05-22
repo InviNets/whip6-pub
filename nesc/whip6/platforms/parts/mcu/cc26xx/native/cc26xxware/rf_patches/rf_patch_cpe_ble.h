@@ -1,9 +1,9 @@
 /******************************************************************************
 *  Filename:       rf_patch_cpe_ble.h
-*  Revised:        2015-10-30 10:00:00 +0100 (fr, 30 Oct 2015)
-*  Revision:       
+*  Revised:        $Date: 2016-06-08 15:37:47 +0200 (on, 08 jun 2016) $
+*  Revision:       $Revision: 17221 $
 *
-*  Description:    RF Core patch file for CC26xx Bluetooth Low Energy
+*  Description:    RF Core patch file for CC26xx
 *
 *  Copyright (c) 2015, Texas Instruments Incorporated
 *  All rights reserved.
@@ -71,7 +71,9 @@ extern "C"
 
 
 CPE_PATCH_TYPE patchImageBle[] = {
-   0x21000471,
+   0x21000499,
+   0x21000519,
+   0x21000479,
    0x4c17b5f0,
    0x18612140,
    0x280278c8,
@@ -98,6 +100,14 @@ CPE_PATCH_TYPE patchImageBle[] = {
    0xbd104780,
    0x21000254,
    0x0000398b,
+   0x4905b510,
+   0xb6724a05,
+   0x280178c8,
+   0x2001dc02,
+   0x1d127048,
+   0x4710b662,
+   0x21000294,
+   0x0000476d,
    0x4e1ab5f8,
    0x6b314605,
    0x09cc4819,
@@ -130,20 +140,43 @@ CPE_PATCH_TYPE patchImageBle[] = {
    0x21000296,
    0x00003cdf,
    0x40044040,
+   0x28004907,
+   0x2004d000,
+   0xb6724a06,
+   0x07c97809,
+   0x5810d001,
+   0x2080e000,
+   0xb240b662,
+   0x00004770,
+   0x2100026b,
+   0x40046058,
 };
-#define _NWORD_PATCHIMAGE_BLE 59
+#define _NWORD_PATCHIMAGE_BLE 79
 
 #define _NWORD_PATCHSYS_BLE 0
 
-#define _IRQ_PATCH_0 0x21000409
-#define _IRQ_PATCH_1 0x21000449
+#define _IRQ_PATCH_0 0x21000411
+#define _IRQ_PATCH_1 0x21000451
 
+
+#ifndef _BLE_SYSRAM_START
+#define _BLE_SYSRAM_START 0x20000000
+#endif
+
+#ifndef _BLE_CPERAM_START
+#define _BLE_CPERAM_START 0x21000000
+#endif
 
 #define _BLE_SYS_PATCH_FIXED_ADDR 0x20000000
 
+#define _BLE_PARSER_PATCH_TAB_OFFSET 0x0334
+#define _BLE_PATCH_TAB_OFFSET 0x033C
+#define _BLE_IRQPATCH_OFFSET 0x03AC
+#define _BLE_PATCH_VEC_OFFSET 0x0404
+
 PATCH_FUN_SPEC void enterBleCpePatch(void)
 {
-   uint32_t *pPatchVec = (uint32_t *) 0x21000404;
+   uint32_t *pPatchVec = (uint32_t *) (_BLE_CPERAM_START + _BLE_PATCH_VEC_OFFSET);
 
 #if (_NWORD_PATCHIMAGE_BLE > 0)
    memcpy(pPatchVec, patchImageBle, sizeof(patchImageBle));
@@ -156,17 +189,19 @@ PATCH_FUN_SPEC void enterBleSysPatch(void)
 
 PATCH_FUN_SPEC void configureBlePatch(void)
 {
-   uint8_t *pPatchTab = (uint8_t *) 0x2100033C;
-   uint32_t *pIrqPatch = (uint32_t *) 0x210003AC;
+   uint8_t *pPatchTab = (uint8_t *) (_BLE_CPERAM_START + _BLE_PATCH_TAB_OFFSET);
+   uint32_t *pIrqPatch = (uint32_t *) (_BLE_CPERAM_START + _BLE_IRQPATCH_OFFSET);
 
 
    pPatchTab[103] = 0;
+   pPatchTab[60] = 1;
+   pPatchTab[48] = 2;
 
    pIrqPatch[1] = _IRQ_PATCH_0;
    pIrqPatch[9] = _IRQ_PATCH_1;
 }
 
-PATCH_FUN_SPEC void rf_patch_cpe_ble(void)
+PATCH_FUN_SPEC void applyBlePatch(void)
 {
    enterBleSysPatch();
    enterBleCpePatch();
@@ -177,6 +212,11 @@ PATCH_FUN_SPEC void refreshBlePatch(void)
 {
    enterBleCpePatch();
    configureBlePatch();
+}
+
+PATCH_FUN_SPEC void rf_patch_cpe_ble(void)
+{
+   applyBlePatch();
 }
 
 #undef _IRQ_PATCH_0
@@ -191,5 +231,5 @@ PATCH_FUN_SPEC void refreshBlePatch(void)
 }
 #endif
 
-#endif //  _APPLY_BLE_PATCH_H
+#endif //  _RF_PATCH_CPE_BLE_H
 

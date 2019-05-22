@@ -1,11 +1,11 @@
 /******************************************************************************
 *  Filename:       chipinfo.c
-*  Revised:        2015-10-28 11:48:13 +0100 (Wed, 28 Oct 2015)
-*  Revision:       44860
+*  Revised:        2016-08-11 14:48:49 +0200 (Thu, 11 Aug 2016)
+*  Revision:       47002
 *
 *  Description:    Collection of functions returning chip information.
 *
-*  Copyright (c) 2015, Texas Instruments Incorporated
+*  Copyright (c) 2015 - 2016, Texas Instruments Incorporated
 *  All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without
@@ -40,12 +40,24 @@
 
 //*****************************************************************************
 //
-// Internal macros
+// Handle support for DriverLib in ROM:
+// This section will undo prototype renaming made in the header file
 //
 //*****************************************************************************
-
-#define BV( x )   ( 1 << ( x ))
-
+#if !defined(DOXYGEN)
+    #undef  ChipInfo_GetSupportedProtocol_BV
+    #define ChipInfo_GetSupportedProtocol_BV NOROM_ChipInfo_GetSupportedProtocol_BV
+    #undef  ChipInfo_GetPackageType
+    #define ChipInfo_GetPackageType         NOROM_ChipInfo_GetPackageType
+    #undef  ChipInfo_GetChipType
+    #define ChipInfo_GetChipType            NOROM_ChipInfo_GetChipType
+    #undef  ChipInfo_GetChipFamily
+    #define ChipInfo_GetChipFamily          NOROM_ChipInfo_GetChipFamily
+    #undef  ChipInfo_GetHwRevision
+    #define ChipInfo_GetHwRevision          NOROM_ChipInfo_GetHwRevision
+    #undef  ThisCodeIsBuiltForCC26xxHwRev22AndLater_HaltIfViolated
+    #define ThisCodeIsBuiltForCC26xxHwRev22AndLater_HaltIfViolated NOROM_ThisCodeIsBuiltForCC26xxHwRev22AndLater_HaltIfViolated
+#endif
 
 //*****************************************************************************
 //
@@ -72,15 +84,14 @@ ChipInfo_GetPackageType( void )
                           FCFG1_USER_ID_PKG_M ) >>
                           FCFG1_USER_ID_PKG_S ) ;
 
-   if (( packType < PACKAGE_4x4 ) ||
-       ( packType > PACKAGE_7x7 )    )
+   if (( packType < PACKAGE_4x4  ) ||
+       ( packType > PACKAGE_WCSP )    )
    {
       packType = PACKAGE_Unknown;
    }
 
    return ( packType );
 }
-
 
 //*****************************************************************************
 //
@@ -97,12 +108,65 @@ ChipInfo_GetChipFamily( void )
                            FCFG1_ICEPICK_DEVICE_ID_WAFER_ID_M ) >>
                            FCFG1_ICEPICK_DEVICE_ID_WAFER_ID_S ) ;
 
-   if (      waferId == 0xB99A )  chipFam = FAMILY_CC26xx       ;
-   else if ( waferId == 0xB9BE )  chipFam = FAMILY_CC13xx       ;
-   else if ( waferId == 0xBB20 )  chipFam = FAMILY_CC26xxLizard ;
-   else if ( waferId == 0xBB41 )  chipFam = FAMILY_CC26xxAgama  ;
+   if ( waferId == 0xB99A ) {
+      if ( ChipInfo_GetDeviceIdHwRevCode() == 0xB ) {
+                                    chipFam = FAMILY_CC26xx_R2    ;
+      } else {
+                                    chipFam = FAMILY_CC26xx       ;
+      }
+   } else if ( waferId == 0xB9BE )  chipFam = FAMILY_CC13xx       ;
+   else if (   waferId == 0xBB41 )  chipFam = FAMILY_CC26xx_Aga   ;
+   else if (   waferId == 0xBB20 )  chipFam = FAMILY_CC26xx_Liz   ;
 
    return ( chipFam );
+}
+
+
+//*****************************************************************************
+//
+// ChipInfo_GetChipType()
+//
+//*****************************************************************************
+ChipType_t
+ChipInfo_GetChipType( void )
+{
+   ChipType_t chipType      = CHIP_TYPE_Unknown ;
+   uint32_t   fcfg1UserId   = ChipInfo_GetUserId();
+   uint32_t   fcfg1Protocol = (( fcfg1UserId & FCFG1_USER_ID_PROTOCOL_M ) >>
+                                               FCFG1_USER_ID_PROTOCOL_S ) ;
+
+   switch( ChipInfo_GetChipFamily() ) {
+
+   case FAMILY_CC26xx :
+      switch ( fcfg1Protocol ) {
+      case 0x2 :
+         chipType = CHIP_TYPE_CC2620 ;
+         break;
+      case 0x4 :
+      case 0xC :
+         chipType = CHIP_TYPE_CC2630 ;
+      case 0x1 :
+      case 0x9 :
+         chipType = CHIP_TYPE_CC2640 ;
+         if ( fcfg1UserId & ( 1 << 23 )) {
+            chipType = CHIP_TYPE_CUSTOM_1;
+         }
+         break;
+      case 0xF :
+         chipType = CHIP_TYPE_CC2650 ;
+         if ( fcfg1UserId & ( 1 << 24 )) {
+            chipType = CHIP_TYPE_CUSTOM_0;
+         }
+         break;
+      }
+      break;
+
+   default :
+      chipType = CHIP_TYPE_Unknown ;
+      break;
+   }
+
+   return ( chipType );
 }
 
 
@@ -145,13 +209,16 @@ ChipInfo_GetHwRevision( void )
          break;
       }
       break;
-   case FAMILY_CC26xxLizard :
-   case FAMILY_CC26xxAgama  :
+   case FAMILY_CC26xx_Liz :
+   case FAMILY_CC26xx_Aga :
       switch ( fcfg1Rev ) {
-      case 0 : // CC26xxLizard or CC26xxAgama PG1.0 (or later)
+      case 0 : // CC26xx_Liz or CC26xx_Aga PG1.0 (or later)
          hwRev = (HwRevision_t)(((uint32_t)HWREV_1_0 ) + minorHwRev );
          break;
       }
+      break;
+   case FAMILY_CC26xx_R2  :
+      hwRev = (HwRevision_t)(((uint32_t)HWREV_1_0 ) + minorHwRev );
       break;
    default :
       // GCC gives warning if not handling all options explicitly in a "switch" on a variable of type "enum"

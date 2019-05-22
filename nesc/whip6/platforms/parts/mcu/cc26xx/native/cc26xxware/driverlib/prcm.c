@@ -1,11 +1,11 @@
 /******************************************************************************
 *  Filename:       prcm.c
-*  Revised:        2015-09-09 11:55:59 +0200 (Wed, 09 Sep 2015)
-*  Revision:       44536
+*  Revised:        2016-08-15 10:30:38 +0200 (Mon, 15 Aug 2016)
+*  Revision:       47006
 *
 *  Description:    Driver for the PRCM.
 *
-*  Copyright (c) 2015, Texas Instruments Incorporated
+*  Copyright (c) 2015 - 2016, Texas Instruments Incorporated
 *  All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without
@@ -408,28 +408,24 @@ PRCMPowerDomainOn(uint32_t ui32Domains)
     //
     if(ui32Domains & PRCM_DOMAIN_RFCORE)
     {
-        HWREG(PRCM_BASE +
-              PRCM_O_PDCTL0RFC) |= PRCM_PDCTL0RFC_ON;
-        HWREG(PRCM_BASE + PRCM_O_PDCTL1RFC) |= PRCM_PDCTL1RFC_ON;
+        HWREG(PRCM_BASE + PRCM_O_PDCTL0RFC   ) = 1;
+        HWREG(PRCM_BASE + PRCM_O_PDCTL1RFC   ) = 1;
     }
     if(ui32Domains & PRCM_DOMAIN_SERIAL)
     {
-        HWREG(PRCM_BASE +
-              PRCM_O_PDCTL0SERIAL) |= PRCM_PDCTL0SERIAL_ON;
+        HWREG(PRCM_BASE + PRCM_O_PDCTL0SERIAL) = 1;
     }
     if(ui32Domains & PRCM_DOMAIN_PERIPH)
     {
-        HWREG(PRCM_BASE +
-              PRCM_O_PDCTL0PERIPH) |= PRCM_PDCTL0PERIPH_ON;
+        HWREG(PRCM_BASE + PRCM_O_PDCTL0PERIPH) = 1;
     }
     if(ui32Domains & PRCM_DOMAIN_VIMS)
     {
-        HWREG(PRCM_BASE + PRCM_O_PDCTL1VIMS) |=
-            PRCM_PDCTL1VIMS_ON;
+        HWREG(PRCM_BASE + PRCM_O_PDCTL1VIMS  ) = 1;
     }
     if(ui32Domains & PRCM_DOMAIN_CPU)
     {
-        HWREG(PRCM_BASE + PRCM_O_PDCTL1CPU) |= PRCM_PDCTL1CPU_ON;
+        HWREG(PRCM_BASE + PRCM_O_PDCTL1CPU   ) = 1;
     }
 }
 
@@ -455,28 +451,24 @@ PRCMPowerDomainOff(uint32_t ui32Domains)
     //
     if(ui32Domains & PRCM_DOMAIN_RFCORE)
     {
-        HWREG(PRCM_BASE +
-              PRCM_O_PDCTL0RFC) &= ~PRCM_PDCTL0RFC_ON;
-        HWREG(PRCM_BASE + PRCM_O_PDCTL1RFC) &= ~PRCM_PDCTL1RFC_ON;
+        HWREG(PRCM_BASE + PRCM_O_PDCTL0RFC   ) = 0;
+        HWREG(PRCM_BASE + PRCM_O_PDCTL1RFC   ) = 0;
     }
     if(ui32Domains & PRCM_DOMAIN_SERIAL)
     {
-        HWREG(PRCM_BASE +
-              PRCM_O_PDCTL0SERIAL) &= ~PRCM_PDCTL0SERIAL_ON;
+        HWREG(PRCM_BASE + PRCM_O_PDCTL0SERIAL) = 0;
     }
     if(ui32Domains & PRCM_DOMAIN_PERIPH)
     {
-        HWREG(PRCM_BASE +
-              PRCM_O_PDCTL0PERIPH) &= ~PRCM_PDCTL0PERIPH_ON;
+        HWREG(PRCM_BASE + PRCM_O_PDCTL0PERIPH) = 0;
     }
     if(ui32Domains & PRCM_DOMAIN_VIMS)
     {
-        HWREG(PRCM_BASE + PRCM_O_PDCTL1VIMS) &=
-            ~PRCM_PDCTL1VIMS_ON;
+        HWREG(PRCM_BASE + PRCM_O_PDCTL1VIMS  ) = 0;
     }
     if(ui32Domains & PRCM_DOMAIN_CPU)
     {
-        HWREG(PRCM_BASE + PRCM_O_PDCTL1CPU) &= ~PRCM_PDCTL1CPU_ON;
+        HWREG(PRCM_BASE + PRCM_O_PDCTL1CPU   ) = 0;
     }
 }
 

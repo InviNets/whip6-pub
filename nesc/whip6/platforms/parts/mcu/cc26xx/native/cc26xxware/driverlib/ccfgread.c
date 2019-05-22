@@ -1,11 +1,11 @@
 /******************************************************************************
 *  Filename:       ccfgread.c
-*  Revised:        2015-08-04 11:44:20 +0200 (Tue, 04 Aug 2015)
-*  Revision:       44329
+*  Revised:        2016-06-30 09:21:03 +0200 (Thu, 30 Jun 2016)
+*  Revision:       46799
 *
 *  Description:    API for reading CCFG.
 *
-*  Copyright (c) 2015, Texas Instruments Incorporated
+*  Copyright (c) 2015 - 2016, Texas Instruments Incorporated
 *  All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without

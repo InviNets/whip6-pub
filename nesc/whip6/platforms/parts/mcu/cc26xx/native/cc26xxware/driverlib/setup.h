@@ -1,11 +1,11 @@
 /******************************************************************************
 *  Filename:       setup.h
-*  Revised:        2015-07-16 12:12:04 +0200 (Thu, 16 Jul 2015)
-*  Revision:       44151
+*  Revised:        2016-08-10 11:10:10 +0200 (Wed, 10 Aug 2016)
+*  Revision:       46997
 *
 *  Description:    Prototypes and defines for the setup API.
 *
-*  Copyright (c) 2015, Texas Instruments Incorporated
+*  Copyright (c) 2015 - 2016, Texas Instruments Incorporated
 *  All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without
@@ -59,6 +59,28 @@ extern "C"
 {
 #endif
 
+// Hardware headers
+#include <inc/hw_types.h>
+// Driverlib headers
+// - None needed
+
+//*****************************************************************************
+//
+// Support for DriverLib in ROM:
+// This section renames all functions that are not "static inline", so that
+// calling these functions will default to implementation in flash. At the end
+// of this file a second renaming will change the defaults to implementation in
+// ROM for available functions.
+//
+// To force use of the implementation in flash, e.g. for debugging:
+// - Globally: Define DRIVERLIB_NOROM at project level
+// - Per function: Use prefix "NOROM_" when calling the function
+//
+//*****************************************************************************
+#if !defined(DOXYGEN)
+    #define SetupTrimDevice                 NOROM_SetupTrimDevice
+#endif
+
 //*****************************************************************************
 //
 //! \brief Performs the necessary trim of the device which is not done in boot code.
@@ -70,7 +92,21 @@ extern "C"
 //! \return None
 //
 //*****************************************************************************
-extern void trimDevice( void );
+extern void SetupTrimDevice( void );
+
+//*****************************************************************************
+//
+// Support for DriverLib in ROM:
+// Redirect to implementation in ROM when available.
+//
+//*****************************************************************************
+#if !defined(DRIVERLIB_NOROM) && !defined(DOXYGEN)
+    #include <driverlib/rom.h>
+    #ifdef ROM_SetupTrimDevice
+        #undef  SetupTrimDevice
+        #define SetupTrimDevice                 ROM_SetupTrimDevice
+    #endif
+#endif
 
 //*****************************************************************************
 //

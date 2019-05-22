@@ -1,11 +1,11 @@
 /******************************************************************************
 *  Filename:       uart.h
-*  Revised:        2015-09-21 15:19:36 +0200 (Mon, 21 Sep 2015)
-*  Revision:       44629
+*  Revised:        2016-07-07 19:12:02 +0200 (Thu, 07 Jul 2016)
+*  Revision:       46848
 *
 *  Description:    Defines and prototypes for the UART.
 *
-*  Copyright (c) 2015, Texas Instruments Incorporated
+*  Copyright (c) 2015 - 2016, Texas Instruments Incorporated
 *  All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without
@@ -208,7 +208,7 @@ extern "C"
 static bool
 UARTBaseValid(uint32_t ui32Base)
 {
-    return(ui32Base == UART0_BASE);
+    return(( ui32Base == UART0_BASE ) || ( ui32Base == UART0_NONBUF_BASE ));
 }
 #endif
 
@@ -376,6 +376,8 @@ extern void UARTFIFOLevelGet(uint32_t ui32Base, uint32_t *pui32TxLevel,
 //! \param ui32Base is the base address of the UART port.
 //! \param ui32UARTClk is the rate of the clock supplied to the UART module.
 //! \param ui32Baud is the desired baud rate.
+//! - Minimum baud rate: ui32Baud >= ceil(ui32UARTClk / 1,048,559.875)
+//! - Maximum baud rate: ui32Baud <= floor(ui32UARTClk / 15.875)
 //! \param ui32Config is the data format for the port.
 //! The parameter is the bitwise OR of three values:
 //! - Number of data bits

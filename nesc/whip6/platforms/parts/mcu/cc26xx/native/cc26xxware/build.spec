@@ -43,6 +43,7 @@ external objects:
   - $(SPEC_DIR)/driverlib/rfc.o
   - $(SPEC_DIR)/driverlib/rom_crypto.o
   - $(SPEC_DIR)/driverlib/setup.o
+  - $(SPEC_DIR)/driverlib/setup_rom.o
   - $(SPEC_DIR)/driverlib/smph.o
   - $(SPEC_DIR)/driverlib/ssi.o
   - $(SPEC_DIR)/driverlib/sys_ctrl.o

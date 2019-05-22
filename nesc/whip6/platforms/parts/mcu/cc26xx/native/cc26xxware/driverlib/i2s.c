@@ -1,11 +1,11 @@
 /******************************************************************************
 *  Filename:       i2s.c
-*  Revised:        2015-05-11 13:56:01 +0200 (Mon, 11 May 2015)
-*  Revision:       43476
+*  Revised:        2016-06-30 09:21:03 +0200 (Thu, 30 Jun 2016)
+*  Revision:       46799
 *
 *  Description:    Driver for the I2S.
 *
-*  Copyright (c) 2015, Texas Instruments Incorporated
+*  Copyright (c) 2015 - 2016, Texas Instruments Incorporated
 *  All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without

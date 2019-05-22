@@ -1,9 +1,9 @@
 /******************************************************************************
 *  Filename:       hw_ccfg_h
-*  Revised:        2015-11-12 13:07:02 +0100 (Thu, 12 Nov 2015)
-*  Revision:       45056
+*  Revised:        2016-03-14 09:20:59 +0100 (Mon, 14 Mar 2016)
+*  Revision:       45924
 *
- * Copyright (c) 2015, Texas Instruments Incorporated
+* Copyright (c) 2015 - 2016, Texas Instruments Incorporated
 * All rights reserved.
 *
 * Redistribution and use in source and binary forms, with or without
@@ -221,14 +221,26 @@
 #define CCFG_SIZE_AND_DIS_FLAGS_SIZE_OF_CCFG_M                      0xFFFF0000
 #define CCFG_SIZE_AND_DIS_FLAGS_SIZE_OF_CCFG_S                              16
 
-// Field:  [15:3] DISABLE_FLAGS
+// Field:  [15:4] DISABLE_FLAGS
 //
 // Reserved for future use. Software should not rely on the value of a
 // reserved. Writing any other value than the reset/default value may result in
 // undefined behavior.
-#define CCFG_SIZE_AND_DIS_FLAGS_DISABLE_FLAGS_W                             13
-#define CCFG_SIZE_AND_DIS_FLAGS_DISABLE_FLAGS_M                     0x0000FFF8
-#define CCFG_SIZE_AND_DIS_FLAGS_DISABLE_FLAGS_S                              3
+#define CCFG_SIZE_AND_DIS_FLAGS_DISABLE_FLAGS_W                             12
+#define CCFG_SIZE_AND_DIS_FLAGS_DISABLE_FLAGS_M                     0x0000FFF0
+#define CCFG_SIZE_AND_DIS_FLAGS_DISABLE_FLAGS_S                              4
+
+// Field:     [3] DIS_TCXO
+//
+// Disable TCXO.
+// 0: TCXO functionality enabled.
+// 1: TCXO functionality disabled.
+// Note:
+// An external TCXO is required if DIS_TCXO = 0.
+#define CCFG_SIZE_AND_DIS_FLAGS_DIS_TCXO                            0x00000008
+#define CCFG_SIZE_AND_DIS_FLAGS_DIS_TCXO_BITN                                3
+#define CCFG_SIZE_AND_DIS_FLAGS_DIS_TCXO_M                          0x00000008
+#define CCFG_SIZE_AND_DIS_FLAGS_DIS_TCXO_S                                   3
 
 // Field:     [2] DIS_GPRAM
 //
@@ -349,22 +361,30 @@
 // Field: [23:22] SCLK_LF_OPTION
 //
 // Select source for SCLK_LF.
-// 0: XOSC_HF_DLF.
-// 31.25kHz clock derived from 24MHz XOSC. Requires user to reconfigure RTC
-// tick speed for correct timing. Standby power mode is not supported when
-// using this clock source.
-// 1: EXTERNAL.
-// External low frequency clock on DIO defined in EXT_LF_CLK.DIO. The RTC tick
-// speed AON_RTC.SUBSECINC is updated to EXT_LF_CLK.RTC_INCREMENT. External
-// clock must always be running when the chip is in standby for VDDR recharge
-// timing.
-// 2: XOSC_LF.
-// 32.768kHz low frequency XOSC
-// 3: RCOSC_LF.
-// Low frequency RCOSC (default)
+// ENUMs:
+// RCOSC_LF                 Low frequency RCOSC (default)
+// XOSC_LF                  32.768kHz low frequency XOSC
+// EXTERNAL_LF              External low frequency clock on DIO defined by
+//                          EXT_LF_CLK.DIO. The RTC tick speed
+//                          AON_RTC:SUBSECINC is updated to
+//                          EXT_LF_CLK.RTC_INCREMENT (done in the
+//                          trimDevice() xxWare boot function). External
+//                          clock must always be running when the chip is
+//                          in standby for VDDR recharge timing.
+// XOSC_HF_DLF              31.25kHz clock derived from 24MHz XOSC (dividing
+//                          by 768 in HW). The RTC tick speed
+//                          [AON_RTC.SUBSECINC.*] is updated to 0x8637BD,
+//                          corresponding to a 31.25kHz clock (done in the
+//                          trimDevice() xxWare boot function). Standby
+//                          power mode is not supported when using this
+//                          clock source.
 #define CCFG_MODE_CONF_SCLK_LF_OPTION_W                                      2
 #define CCFG_MODE_CONF_SCLK_LF_OPTION_M                             0x00C00000
 #define CCFG_MODE_CONF_SCLK_LF_OPTION_S                                     22
+#define CCFG_MODE_CONF_SCLK_LF_OPTION_RCOSC_LF                      0x00C00000
+#define CCFG_MODE_CONF_SCLK_LF_OPTION_XOSC_LF                       0x00800000
+#define CCFG_MODE_CONF_SCLK_LF_OPTION_EXTERNAL_LF                   0x00400000
+#define CCFG_MODE_CONF_SCLK_LF_OPTION_XOSC_HF_DLF                   0x00000000
 
 // Field:    [21] VDDR_TRIM_SLEEP_TC
 //
@@ -398,9 +418,16 @@
 // Reserved for future use. Software should not rely on the value of a
 // reserved. Writing any other value than the reset/default value may result in
 // undefined behavior.
+// ENUMs:
+// 24M                      24 MHz XOSC_HF
+// 48M                      48 MHz XOSC_HF
+// HPOSC                    HPOSC
 #define CCFG_MODE_CONF_XOSC_FREQ_W                                           2
 #define CCFG_MODE_CONF_XOSC_FREQ_M                                  0x000C0000
 #define CCFG_MODE_CONF_XOSC_FREQ_S                                          18
+#define CCFG_MODE_CONF_XOSC_FREQ_24M                                0x000C0000
+#define CCFG_MODE_CONF_XOSC_FREQ_48M                                0x00080000
+#define CCFG_MODE_CONF_XOSC_FREQ_HPOSC                              0x00040000
 
 // Field:    [17] XOSC_CAP_MOD
 //

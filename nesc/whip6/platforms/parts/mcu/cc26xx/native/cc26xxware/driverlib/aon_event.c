@@ -1,11 +1,11 @@
 /******************************************************************************
 *  Filename:       aon_event.c
-*  Revised:        2015-06-09 12:16:53 +0200 (Tue, 09 Jun 2015)
-*  Revision:       43826
+*  Revised:        2016-07-07 19:12:02 +0200 (Thu, 07 Jul 2016)
+*  Revision:       46848
 *
 *  Description:    Driver for the AON Event fabric.
 *
-*  Copyright (c) 2015, Texas Instruments Incorporated
+*  Copyright (c) 2015 - 2016, Texas Instruments Incorporated
 *  All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without

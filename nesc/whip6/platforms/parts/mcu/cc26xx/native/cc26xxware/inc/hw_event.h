@@ -1,9 +1,9 @@
 /******************************************************************************
 *  Filename:       hw_event_h
-*  Revised:        2015-11-12 13:07:02 +0100 (Thu, 12 Nov 2015)
-*  Revision:       45056
+*  Revised:        2016-06-21 09:05:39 +0200 (Tue, 21 Jun 2016)
+*  Revision:       46731
 *
- * Copyright (c) 2015, Texas Instruments Incorporated
+* Copyright (c) 2015 - 2016, Texas Instruments Incorporated
 * All rights reserved.
 *
 * Redistribution and use in source and binary forms, with or without
@@ -465,7 +465,7 @@
 //
 // Read only selection value
 // ENUMs:
-// SSI1_COMB                SSI0 combined interrupt, interrupt flags are found
+// SSI1_COMB                SSI1 combined interrupt, interrupt flags are found
 //                          here SSI1:MIS
 #define EVENT_CPUIRQSEL8_EV_W                                                7
 #define EVENT_CPUIRQSEL8_EV_M                                       0x0000007F

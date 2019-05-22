@@ -1,12 +1,12 @@
 /******************************************************************************
 *  Filename:       driverlib_release.c
-*  Revised:        $Date: 2015-03-11 11:25:46 +0100 (Wed, 11 Mar 2015) $
-*  Revision:       $Revision: 42932 $
+*  Revised:        $Date: 2016-06-30 09:21:03 +0200 (Thu, 30 Jun 2016) $
+*  Revision:       $Revision: 46799 $
 *
 *  Description:    Provides macros for ensuring that a specfic release of
 *                  DriverLib is used.
 *
-*  Copyright (c) 2015, Texas Instruments Incorporated
+*  Copyright (c) 2015 - 2016, Texas Instruments Incorporated
 *  All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without
@@ -42,4 +42,4 @@
 
 
 /// Declare the current DriverLib release
-DRIVERLIB_DECLARE_RELEASE(0, 45180);
+DRIVERLIB_DECLARE_RELEASE(0, 47020);

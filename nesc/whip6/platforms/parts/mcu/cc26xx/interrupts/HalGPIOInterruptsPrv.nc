@@ -102,5 +102,11 @@ implementation {
         }
     }
 
+    async command bool ExternalEvent.getPending[uint32_t IOId]() {
+        atomic {
+            return GPIO_getEventDio(IOId);
+        }
+    }
+
     default async event void ExternalEvent.triggered[uint32_t IOId]() {}
 }

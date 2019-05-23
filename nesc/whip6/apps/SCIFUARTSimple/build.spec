@@ -12,5 +12,3 @@ boards:
  - cherry-v1
  - cherry-v2
 build dir: $(SPEC_DIR)/build/$(BOARD)
-dependencies:
- - platforms/boards/cc26xxbased/cherry-v1/scif_uart

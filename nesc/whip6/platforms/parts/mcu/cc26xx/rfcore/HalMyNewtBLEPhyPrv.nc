@@ -104,12 +104,12 @@ implementation {
     uint32_t m_start_time;
     bool m_start_time_valid;
 
-    rfCoreHal_CMD_BLE_ADV_t __attribute__((aligned(4))) bleAdvCmd;
-    rfCoreHal_bleAdvPar_t bleAdvParams;
+    rfc_CMD_BLE_ADV_t __attribute__((aligned(4))) bleAdvCmd;
+    rfc_bleAdvPar_t bleAdvParams;
 
-    rfCoreHal_CMD_BLE_SLAVE_t __attribute__((aligned(4))) bleSlaveCmd;
-    rfCoreHal_bleSlavePar_t bleSlaveParams;
-    rfCoreHal_bleMasterSlaveOutput_t bleSlaveOutput;
+    rfc_CMD_BLE_SLAVE_t __attribute__((aligned(4))) bleSlaveCmd;
+    rfc_bleSlavePar_t bleSlaveParams;
+    rfc_bleMasterSlaveOutput_t bleSlaveOutput;
 
     rfc_dataEntryPointer_t rxEntry[NUM_RX_ENTRIES];
     dataQueue_t rxQueue;
@@ -165,15 +165,15 @@ implementation {
     }
 
     static void initBLEAdvCmd() {
-        rfCoreHal_CMD_BLE_ADV_t* cmd = &bleAdvCmd;
-        rfCoreHal_bleAdvPar_t* params = &bleAdvParams;
+        rfc_CMD_BLE_ADV_t* cmd = &bleAdvCmd;
+        rfc_bleAdvPar_t* params = &bleAdvParams;
 
         call RFCore.initRadioOp((rfc_radioOp_t*)cmd,
-                sizeof(rfCoreHal_CMD_BLE_ADV_t), CMD_BLE_ADV);
+                sizeof(rfc_CMD_BLE_ADV_t), CMD_BLE_ADV);
 
-        cmd->pParams = (uint8_t*)params;
+        cmd->pParams = params;
 
-        memset(params, 0x00, sizeof(rfCoreHal_bleAdvPar_t));
+        memset(params, 0x00, sizeof(rfc_bleAdvPar_t));
 
         /* Set up BLE Advertisement parameters */
         params->endTrigger.triggerType = TRIG_NEVER;
@@ -193,16 +193,16 @@ implementation {
     }
 
     static void initBLESlaveCmd() {
-        rfCoreHal_CMD_BLE_SLAVE_t* cmd = &bleSlaveCmd;
-        rfCoreHal_bleSlavePar_t* params = &bleSlaveParams;
+        rfc_CMD_BLE_SLAVE_t* cmd = &bleSlaveCmd;
+        rfc_bleSlavePar_t* params = &bleSlaveParams;
 
         call RFCore.initRadioOp((rfc_radioOp_t*)cmd,
-                sizeof(rfCoreHal_CMD_BLE_SLAVE_t), CMD_BLE_SLAVE);
+                sizeof(rfc_CMD_BLE_SLAVE_t), CMD_BLE_SLAVE);
 
-        cmd->pParams = (uint8_t*)params;
-        cmd->pOutput = (uint8_t*)&bleSlaveOutput;
+        cmd->pParams = params;
+        cmd->pOutput = &bleSlaveOutput;
 
-        memset(params, 0x00, sizeof(rfCoreHal_bleSlavePar_t));
+        memset(params, 0x00, sizeof(rfc_bleSlavePar_t));
 
         params->endTrigger.triggerType = TRIG_NEVER;
         params->endTime = 0;
@@ -450,8 +450,8 @@ implementation {
             uint8_t scan_rsp_len)
             @C() @spontaneous() {
         uint32_t cmd_status;
-        rfCoreHal_CMD_BLE_ADV_t* cmd = &bleAdvCmd;
-        rfCoreHal_bleAdvPar_t* params = &bleAdvParams;
+        rfc_CMD_BLE_ADV_t* cmd = &bleAdvCmd;
+        rfc_bleAdvPar_t* params = &bleAdvParams;
 
         if (claim(STATE_ADV) != SUCCESS) {
             return 1;
@@ -507,8 +507,8 @@ implementation {
             uint32_t timeout_cputime, uint32_t window_widening_us,
             bool transmit_window) @C() @spontaneous() {
         uint32_t cmd_status;
-        rfCoreHal_CMD_BLE_SLAVE_t* cmd = &bleSlaveCmd;
-        rfCoreHal_bleSlavePar_t* params = &bleSlaveParams;
+        rfc_CMD_BLE_SLAVE_t* cmd = &bleSlaveCmd;
+        rfc_bleSlavePar_t* params = &bleSlaveParams;
 
         if (claim(STATE_SLAVE) != SUCCESS) {
             return 1;
@@ -523,7 +523,9 @@ implementation {
 
         cmd->channel = m_channel;
         params->accessAddress = m_access_addr;
-        params->crcInit = m_crcinit;
+        params->crcInit0 = m_crcinit;
+        params->crcInit1 = m_crcinit >> 8;
+        params->crcInit2 = m_crcinit >> 16;
         if (conn_state == 0) {
             conn_state = 0x0b;
         } else {
@@ -540,18 +542,14 @@ implementation {
         params->endTime = m_start_time
             + cputimedelta2ratdelta(timeout_cputime);
 
-        // Well, that's a stupidity in the CC26xxWare-provided headers,
-        // where the timeoutTrigger.triggerType is not present, and the
-        // place where it should be is occupied by the highest byte of
-        // crcInit...
         if (!transmit_window) {
-            params->crcInit |= TRIG_ABSTIME << 24;
+            params->timeoutTrigger.triggerType = TRIG_ABSTIME;
             params->timeoutTime = m_start_time
                 + us2ratdelta(SLAVE_STANDARD_RX_WINDOW_US)
                 + us2ratdelta(window_widening_us)
                 + us2ratdelta(SLAVE_TIMEOUT_RIGHT_MARGIN_US);
         } else {
-            params->crcInit |= TRIG_NEVER << 24;
+            params->timeoutTrigger.triggerType = TRIG_NEVER;
             params->timeoutTime = params->endTime;
         }
         if (params->timeoutTime - cmd->startTime < SLAVE_MIN_TIMEOUT_RAT) {

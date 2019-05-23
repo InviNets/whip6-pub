@@ -12,7 +12,7 @@ generic configuration ICountPub() {
 }
 
 implementation {
-    components new HalEventCountPub(60 * 1024) as EvCnt;
+    components new HalEventCountPub() as EvCnt;
     EventCount = EvCnt.EvCntA;
 
     components CC26xxPinsPub as Pins;

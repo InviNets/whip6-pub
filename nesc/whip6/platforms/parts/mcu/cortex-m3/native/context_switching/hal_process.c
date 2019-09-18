@@ -128,5 +128,6 @@ __attribute__((naked)) void PendSVISR(void) {
         "LDMIA   R12!,{R4-R11}\n"              /* Restore New Context */
         "MSR     PSP,R12\n"                    /* Write PSP */
         "BX      LR\n"                         /* Return to Thread Mode */
+        ".LTORG\n"
     );
 }

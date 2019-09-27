@@ -5,7 +5,7 @@
 # Copyright (c) 2012-2017 Szymon Acedanski
 # All rights reserved.
 #
-# This file is distributed under the terms in the attached LICENSE     
+# This file is distributed under the terms in the attached LICENSE
 # files.
 #
 import os
@@ -24,6 +24,7 @@ from config_tags import NESC_ARGS
 
 GCC_PREFIX = 'gcc prefix'
 INCL_PATHS = 'include paths'
+NESC_DEFINE = 'nesc define'
 
 class NescBuilder(BuildStep):
   def __init__(self,  project_root, configs, flags):
@@ -43,6 +44,9 @@ class NescBuilder(BuildStep):
 
       if DEFINITIONS in config:
         self.defines.extend(config[DEFINITIONS])
+
+      if NESC_DEFINE in config:
+        self.defines.extend(config[NESC_DEFINE])
 
       if NESC_ARGS in config:
         for name, value in config[NESC_ARGS].items():

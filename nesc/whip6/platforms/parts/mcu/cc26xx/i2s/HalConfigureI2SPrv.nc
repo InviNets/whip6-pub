@@ -17,6 +17,7 @@
  * mono. Output is not supported in this driver.
  */
 
+#include <stdio.h>
 #include <inc/hw_ioc.h>
 #include <driverlib/ioc.h>
 #include <driverlib/i2s.h>
@@ -26,11 +27,12 @@
 #include "hal_configure_i2s.h"
 
 generic module HalConfigureI2SPrv(uint32_t i2sBase,
-        i2s_word_size_t wordSize, uint32_t preferredRate,
+        i2s_word_size_t wordSize, uint32_t defaultRate,
         i2s_clock_pol_t clockPol, audio_sample_format_t sampleFormat) {
     provides interface OnOffSwitch @atleastonce();
     provides interface HalI2SSampleSize;
     provides interface AudioFormat;
+    provides interface AudioFormatControl;
 
     uses interface CC26xxPin as BCLKPin;
     uses interface CC26xxPin as WCLKPin;
@@ -44,6 +46,7 @@ implementation {
     I2SControlTable controlTable;
 
     bool isOn = FALSE;
+    uint32_t preferredRate = defaultRate;
 
     event void BCLKPin.configure() {
         IOCPortConfigureSet(call BCLKPin.IOId(), IOC_PORT_MCU_I2S_BCLK,
@@ -79,6 +82,8 @@ implementation {
     command error_t OnOffSwitch.on() {
         int bits = wordSize == I2S_WORD_16BIT ? 16 : 24;
         uint32_t clkDiv = computeDivisor();
+
+        printf("[HalConfigureI2SPrv] clkDiv=%lu\r\n", clkDiv);
 
         call PowerDomain.on();
 
@@ -163,5 +168,9 @@ implementation {
 
     command audio_sample_format_t AudioFormat.getSampleFormat() {
         return sampleFormat;
+    }
+
+    command void AudioFormatControl.requestSampleRate(uint32_t sampleRate) {
+        preferredRate = sampleRate;
     }
 }

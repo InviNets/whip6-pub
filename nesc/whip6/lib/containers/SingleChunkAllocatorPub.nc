@@ -16,7 +16,7 @@ generic module SingleChunkAllocatorPub(int size) {
     provides interface ChunkAllocator;
 }
 implementation {
-    uint8_t_xdata buf[size];
+    uint8_t_xdata buf[size] __attribute__((aligned(4)));
     bool isAllocated;
 
     command size_t ChunkAllocator.getChunkSize() {

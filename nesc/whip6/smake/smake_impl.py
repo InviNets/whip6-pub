@@ -291,7 +291,7 @@ class SMake(object):
             if val:
                 body = body.replace('$(%s)' % var, val)
 
-        config = yaml.load(body)
+        config = yaml.safe_load(body)
       return config
 
   def _recursive_config_list(self, search_roots, suffixes=()):

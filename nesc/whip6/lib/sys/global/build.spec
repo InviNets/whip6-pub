@@ -15,6 +15,7 @@ nesc arguments:
     - GlobalError
     - GlobalPanic
     - GlobalAddressPrinting
+    - GlobalVIMS
 
 wnesc arguments:
   include:
@@ -23,3 +24,4 @@ wnesc arguments:
     - $(REPO_PATH)/nesc/whip6/lib/sys/global/GlobalError.h
     - $(REPO_PATH)/nesc/whip6/lib/sys/global/GlobalPanic.h
     - $(REPO_PATH)/nesc/whip6/lib/sys/global/GlobalAddressPrinting.h
+    - $(REPO_PATH)/nesc/whip6/lib/sys/global/GlobalVIMS.h

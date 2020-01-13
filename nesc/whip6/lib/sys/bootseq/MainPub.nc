@@ -81,6 +81,9 @@ implementation {
         call SystemInitEntry.init();
         while(call Scheduler.runNextTask());
 
+        /* Trim VIMS to be set to either GPRAM or CACHE mode depending on flag */
+        trimVIMSMode();
+
         /* Enable interrupts now that system is ready. */
         __nesc_enable_interrupt();
 

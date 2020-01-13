@@ -26,6 +26,9 @@ implementation {
      * Components that do not require run-time initialization:
      */
 
+    // Adds VIMS functions to global namespace.
+    components VIMSOverridePub;
+
     // Adds the interrupt enable bit to global namespace.
     components HalAtomicProviderPub;
 

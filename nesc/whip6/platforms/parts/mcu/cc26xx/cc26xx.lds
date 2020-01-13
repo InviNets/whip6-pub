@@ -130,9 +130,13 @@ SECTIONS
         . = ALIGN(4);
     } > SRAM
 
-    .gpram :
+    .gpram : ALIGN(4)
     { 
-    } > GPRAM
+        _gpram = .;
+        *(.gpram*)
+        _egpram = .;
+    } > GPRAM AT > FLASH
+    _lgpram = LOADADDR(.gpram);
 
     .bootloader :
     {

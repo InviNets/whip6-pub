@@ -12,7 +12,11 @@
 
 #include <driverlib/vims.h>
 
+#if ((! defined(CC26XX_VIMS_GPRAM_MODE)) || ((CC26XX_VIMS_GPRAM_MODE) != 1))
+#define CC26XX_PLACE_IN_GPRAM __attribute__((deprecated("Cannot place objects in CC26XX GPRAM without CC26XX_VIMS_GPRAM_MODE defined and set to 1")))
+#else
 #define CC26XX_PLACE_IN_GPRAM __attribute__((section(".gpram")))
+#endif
 
 #ifndef CC26XX_VIMS_GPRAM_MODE
 #define CC26XX_VIMS_GPRAM_MODE false
@@ -22,9 +26,11 @@ extern uint8_t _lgpram;
 extern uint8_t _gpram;
 extern uint8_t _egpram;
 
-module VIMSOverridePub {}
+module CC26xxVIMSPrv {
+    provides interface Bootstrap;
+}
 implementation {
-    void trimVIMSMode() @C() {
+    command inline void Bootstrap.bootstrap() {
         if (CC26XX_VIMS_GPRAM_MODE) {
             /* Switch VIMS to GPRAM mode with waiting until mode actually switches */
             VIMSModeSafeSet(VIMS_BASE, VIMS_MODE_DISABLED, true);

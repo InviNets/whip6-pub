@@ -26,9 +26,6 @@ implementation {
      * Components that do not require run-time initialization:
      */
 
-    // Adds VIMS functions to global namespace.
-    components VIMSOverridePub;
-
     // Adds the interrupt enable bit to global namespace.
     components HalAtomicProviderPub;
 
@@ -43,6 +40,10 @@ implementation {
     // Configure a standard scheduler
     components TinySchedulerPub, MainPub;
     MainPub.Scheduler -> TinySchedulerPub;
+
+    // VIMS configuration
+    components CC26xxVIMSPrv;
+    MainPub.Bootstrap -> CC26xxVIMSPrv;
 
     // Configure process scheduler.
     components MainProcessPub;

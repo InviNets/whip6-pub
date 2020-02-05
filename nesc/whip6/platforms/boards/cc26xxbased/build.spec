@@ -47,6 +47,7 @@ dependencies:
   - lib/util
   - lib/watchdog
   - platforms/parts/mcu/cc26xx/
+  - platforms/parts/mcu/cc26xx/vims/
   - platforms/parts/mcu/cortex-m3/native/context_switching
   - platforms/parts/sensor/
   - platforms/tools/compiler/nescc

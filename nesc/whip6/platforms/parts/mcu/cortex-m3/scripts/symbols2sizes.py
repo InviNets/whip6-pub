@@ -17,6 +17,7 @@ import errno
 KINDS = {
     'flash': 'DdGgpRrTt',
     'ram': 'CDdGgBb',
+    'gpram': 'CDdGgBb'
 }
 
 parser = argparse.ArgumentParser(description='Creates a directory tree from a '

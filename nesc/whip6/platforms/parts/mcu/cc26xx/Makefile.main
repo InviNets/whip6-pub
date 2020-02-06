@@ -16,7 +16,7 @@ LIBRARIES += -lm
 ### Compilation rules
 
 all: $(TARGET).hex $(TARGET).nobl.dfu.bin $(TARGET).nobl.lst \
-	$(TARGET).nobl.sym $(TARGET).nobl.flash.sizes $(TARGET).nobl.ram.sizes \
+	$(TARGET).nobl.sym $(TARGET).nobl.flash.sizes $(TARGET).nobl.ram.sizes $(TARGET).nobl.gpram.sizes \
 	$(TARGET).workingcopy.hex $(TARGET).flash .release-images
 
 .release-images: $(TARGET).nobl.dfu.bin $(TARGET).hex
@@ -73,7 +73,7 @@ $(TARGET).nobl.elf: $(OBJS)
 	
 	@echo
 	@echo "Size report:"
-	@$(OBJDUMP) -h $@ | perl -ne '$$b{$$1}=hex $$2 if /^\s*\d+\s*\.(text|data|bss|heap|minstack|appversion|flog|bootloader)\s+(\S+)/; END { printf("%8d bytes in ROM\n%8d bytes in RAM\n",$$b{text}+$$b{data}+$$b{appversion}+$$b{flog}+$$b{bootloader},$$b{data}+$$b{bss}+$$b{heap}+$$b{minstack}); }'
+	@$(OBJDUMP) -h $@ | perl -ne '$$b{$$1}=hex $$2 if /^\s*\d+\s*\.(text|data|bss|heap|minstack|appversion|flog|bootloader|gpram)\s+(\S+)/; END { printf("%8d bytes in ROM\n%8d bytes in RAM\n%8d bytes in GPRAM",$$b{text}+$$b{data}+$$b{appversion}+$$b{flog}+$$b{bootloader}+$$b{gpram},$$b{data}+$$b{bss}+$$b{heap}+$$b{minstack},$$b{gpram}); }'
 	@echo
 
 %.hex: %.elf
@@ -108,6 +108,9 @@ $(TARGET).workingcopy.o: $(TARGET).workingcopy.c
 
 %.ram.sizes: %.elf
 	$(NM) -f posix $< | $(SYMBOLS2SIZES) -k ram $@
+
+%.gpram.sizes: %.elf
+	$(NM) -f posix $< | $(SYMBOLS2SIZES) -k gpram $@
 
 %.flash: %.nobl.elf
 	$(OBJCOPY) $(OBJCOPY_FLAGS) $< $@

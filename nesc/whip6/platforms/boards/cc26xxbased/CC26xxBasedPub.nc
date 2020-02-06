@@ -41,6 +41,10 @@ implementation {
     components TinySchedulerPub, MainPub;
     MainPub.Scheduler -> TinySchedulerPub;
 
+    // VIMS configuration
+    components CC26xxVIMSPrv;
+    MainPub.Bootstrap -> CC26xxVIMSPrv;
+
     // Configure process scheduler.
     components MainProcessPub;
     TinySchedulerPub.TaskPostedHook -> MainProcessPub.SchedulerTaskPostedHook;

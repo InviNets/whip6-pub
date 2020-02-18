@@ -98,8 +98,19 @@ SECTIONS
     } > SRAM AT > FLASH
     _ldata = LOADADDR(.data);
 
+    .gpram : ALIGN(4)
+    { 
+        _gpram = .;
+        *(.gpram*)
+        _egpram = .;
+    } > GPRAM AT > FLASH
+    _lgpram = LOADADDR(.gpram);
+
     /* This section is replaced by a generated NULL-terminated version string,
-     * see Makefile.main. */
+     * see Makefile.main.
+     *
+     * Put all sections that uses flash memory before `.appversion` section
+     * to avoid overwriting them by the generated version string. */
     .appversion : ALIGN(1)
     {
         KEEP(*(.appversion))
@@ -129,14 +140,6 @@ SECTIONS
         . = . + _Min_Stack_Size;
         . = ALIGN(4);
     } > SRAM
-
-    .gpram : ALIGN(4)
-    { 
-        _gpram = .;
-        *(.gpram*)
-        _egpram = .;
-    } > GPRAM AT > FLASH
-    _lgpram = LOADADDR(.gpram);
 
     .bootloader :
     {

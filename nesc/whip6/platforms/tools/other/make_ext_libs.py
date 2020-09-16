@@ -39,7 +39,7 @@ class BuildExternalLibRun(BuildStep):
       if RUN_MAKE_IN in config:
          for l in config[RUN_MAKE_IN]:
            relative_l = l[(len(self.project_root) + 1):]
-           print colored('Running make in %s ...' % (relative_l,), 'cyan')
+           print(colored('Running make in %s ...' % (relative_l,), 'cyan'))
            self.call('make', '-j', str(num_threads), '-C', l, *makeopts)
 
 # Exports the BuildStep to make it visible for smake

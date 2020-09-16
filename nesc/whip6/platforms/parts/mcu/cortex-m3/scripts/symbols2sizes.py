@@ -24,7 +24,7 @@ parser = argparse.ArgumentParser(description='Creates a directory tree from a '
         'list of symbol (output of nm -t posix) with files of the sizes '
         'corresponding to the symbols. They can then be visualized with tools '
         'like Baobab.')
-parser.add_argument('--kinds', '-k', choices=KINDS.keys(), default='flash',
+parser.add_argument('--kinds', '-k', choices=list(KINDS.keys()), default='flash',
         help='kinds of symbols to choose')
 parser.add_argument('output_dir',
         help='output directory')
@@ -47,8 +47,8 @@ for line in sys.stdin:
     filename = os.path.join(args.output_dir, *parts)
     try:
         os.makedirs(os.path.dirname(filename))
-    except OSError, e:
+    except OSError as e:
         if e.errno != errno.EEXIST:
             raise
     with open(filename, 'wb') as f:
-        f.write('X' * size)
+        f.write(b'X' * size)

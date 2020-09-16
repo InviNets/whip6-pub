@@ -45,8 +45,8 @@ class BuildStep(object):
 
         self.build_dir = self.find_config_value(BUILD_DIR)
         if not self.build_dir:
-            print colored('Warning: "build dir" not defined. This is ok, '
-            'if build step does not need one.', 'yellow')
+            print(colored('Warning: "build dir" not defined. This is ok, '
+            'if build step does not need one.', 'yellow'))
 
         self.board = flags.pop(-1)
         self.target_args = flags.pop(-1)
@@ -101,7 +101,7 @@ class BuildStep(object):
             if result != 0:
                 raise BuildError('Command "%s" returned %d' % (
                     truncate(real_command, 100), result))
-        except OSError, e:
+        except OSError as e:
           raise BuildError('Failed to execute "%s": %s' % (
                 real_command, e))
 
@@ -130,4 +130,4 @@ class BuildStep(object):
 
     def _show_command(self, command):
         if 'show_commands' in self.flags:
-            print colored(command, 'yellow')
+            print(colored(command, 'yellow'))

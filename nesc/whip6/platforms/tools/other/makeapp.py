@@ -25,10 +25,10 @@ class BuildNewAppFolder(BuildStep):
     BuildStep.__init__(self,  project_root, configs, flags)
 
   def run_step(self):
-    coreName = raw_input("What will be the core name of the "
+    coreName = input("What will be the core name of the "
             "app (fe. ButtonRadio, Blink)?\n> ").strip()
 
-    if not re.match(ur'^[A-Z]\w+$', coreName):
+    if not re.match(r'^[A-Z]\w+$', coreName):
       raise BuildError("Error: Name must match regex ^[A-Z]\w+$")
 
     newAppPath = join(self.project_root, APPS, coreName)
@@ -36,7 +36,7 @@ class BuildNewAppFolder(BuildStep):
     if os.path.exists(newAppPath):
       raise BuildError("Error: path %s already exists" % newAppPath)
 
-    srcAppName = raw_input("What will be the base app? This must be"
+    srcAppName = input("What will be the base app? This must be"
         " an existing app folder name\n"
             "[Blink] > ").strip()
 
@@ -48,7 +48,7 @@ class BuildNewAppFolder(BuildStep):
     if not os.path.exists(srcAppPath):
       raise BuildError("Error: Path %s does not exist" % srcAppPath)
 
-    repName = raw_input("What will be the replace word? This word will be"
+    repName = input("What will be the replace word? This word will be"
         " replaced in all files with %s\n"
             "[%s] > " % (coreName, srcAppName)).strip()
 

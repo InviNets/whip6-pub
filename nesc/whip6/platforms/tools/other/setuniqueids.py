@@ -9,7 +9,7 @@
 #
 import glob
 import time
-import cStringIO
+import io
 from os.path import join
 
 from build_step import BuildStep
@@ -37,21 +37,21 @@ class SetUniqueIdInAppC(BuildStep):
       contents = f.read()
     contents = contents.replace(REMOVE_LINE, '')
     parts = contents.split(SYMBOL)
-    io = cStringIO.StringIO()
-    io.write(parts[0])
+    stream = io.StringIO()
+    stream.write(parts[0])
     for p in parts[1:]:
-      io.write(str(bestIdsList[firstId]))
-      io.write(p)
+      stream.write(str(bestIdsList[firstId]))
+      stream.write(p)
       firstId += 1
     with open(cFile, 'w') as f:
-      f.write(io.getvalue())
+      f.write(stream.getvalue())
     return firstId
 
   def _findEfficientNumbers(self, maxNumber):
     """Efficient numbers are thouse which have no 0s (101 - bad),
     are short and have a small digit sum"""
     candidates = []
-    for i in xrange(1, maxNumber + 1):
+    for i in range(1, maxNumber + 1):
       hasZero, cost = self._evaluateNumber(i)
       if not hasZero:
         candidates.append((cost, i))
@@ -66,7 +66,7 @@ class SetUniqueIdInAppC(BuildStep):
       digSum += d
       if d == 0:
         return True, -1
-      n /= 10
+      n //= 10
       digCnt += 1
 
     return (False, (digCnt + digSum))

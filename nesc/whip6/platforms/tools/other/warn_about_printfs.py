@@ -15,7 +15,7 @@ from termcolor import colored
 
 from build_step import BuildStep
 
-PRINTF_PATTERN = re.compile(ur'printf\s*\(\s*"')
+PRINTF_PATTERN = re.compile(r'printf\s*\(\s*"')
 WARNING_MSG = '''
 +-------------------------------------------------------------------+
 |                                                                   |
@@ -35,7 +35,7 @@ class WarnAboutPrintfs(BuildStep):
         for cFile in c_files:
             with open(cFile, 'r') as f:
                 if PRINTF_PATTERN.search(f.read()):
-                    print colored(WARNING_MSG, 'yellow')
+                    print(colored(WARNING_MSG, 'yellow'))
                     return
 
 BuildStepImpl = WarnAboutPrintfs

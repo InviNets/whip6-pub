@@ -37,7 +37,8 @@ def _comp_targets_typecheck(t):
   if not isinstance(t, dict):
     return False
   if t.values():
-    if not isinstance(t.values()[0], list):
+    elem = next(iter(t.values()))
+    if not isinstance(elem, list):
       return False
   return True
 

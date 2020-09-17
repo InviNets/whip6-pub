@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 #
 # whip6: Warsaw High-performance IPv6.
 #

@@ -27,7 +27,7 @@ class GenGDBInitRun(BuildStep):
       paths.append(config[CONF_PATH])
     paths.extend(self.collect_config_list(INCL_PATHS))
     for path in paths:
-        print >>f, 'directory ', path
+        print('directory ', path, file=f)
 
   def run_step(self):
     with open(os.path.join(self.build_dir, 'gdbinit'), 'w') as f:

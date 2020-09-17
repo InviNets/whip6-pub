@@ -95,6 +95,6 @@ with open('results.csv', 'w') as f:
          f.write('{},{},{},{}\n'.format(app, data['time'], data['size'], data['overflow']))
 
 print('----------------------------------------------------------')
-print(colored('good apps:', 'green'), ','.join(apps_good))
-print(colored('bad apps:', 'red'), ','.join(apps_bad))
-print('result: {}/{}'.format(len(apps_good), len(apps_good) + len(apps_bad)))
+print((colored('good apps:', 'green'), ','.join(apps_good)))
+print((colored('bad apps:', 'red'), ','.join(apps_bad)))
+print(('result: {}/{}'.format(len(apps_good), len(apps_good) + len(apps_bad))))

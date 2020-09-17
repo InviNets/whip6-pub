@@ -90,7 +90,7 @@ parser.add_argument('-W', action='append', dest='flags',
 args = parser.parse_args()
 
 def fail(msg):
-  print colored(msg, 'red')
+  print(colored(msg, 'red'))
   sys.exit(1)
 
 class SMake(object):
@@ -109,7 +109,7 @@ class SMake(object):
     available_board_names = self._available_board_names()
     if args.list_boards:
       for board_name in available_board_names:
-        print board_name
+        print(board_name)
       sys.exit(0)
 
     if not args.board:
@@ -149,7 +149,7 @@ class SMake(object):
 
     # Verify target argument
     if target not in direct_targets and target not in composite_targets:
-      print colored('Unknown target. Choose one of:', 'yellow')
+      print(colored('Unknown target. Choose one of:', 'yellow'))
       self._show_board_targets(board)
       sys.exit(1)
 
@@ -165,7 +165,7 @@ class SMake(object):
         fail('Target loop detected:')
         for t in target_history:
           fail(t),
-        print ''
+        print('')
         sys.exit(1)
 
       target_history.append(new_target)
@@ -200,7 +200,7 @@ class SMake(object):
                                     args.flags)
         try:
           build_step.run_step()
-        except BuildError, e:
+        except BuildError as e:
           fail('Target "%s" failed - %s' % (new_target, str(e)))
 
       else:
@@ -208,10 +208,10 @@ class SMake(object):
 
       target_history.pop(-1)
       targets_ready.add(new_target)
-      print colored('Target %s complete.' % new_target, 'cyan')
+      print(colored('Target %s complete.' % new_target, 'cyan'))
 
     make(target)  # Actually do the job
-    print colored('All targets completed successfully!', 'green')
+    print(colored('All targets completed successfully!', 'green'))
 
   def _available_board_names(self):
     config = self._read_config(os.getcwd())
@@ -230,16 +230,16 @@ class SMake(object):
                   max(len(k) for k in direct_targets.keys()))
     format_str = '%%%ds - %%s' % (padding + 9)
     for name in composite_targets.keys():
-      print format_str % (colored(name, 'cyan'), ', '.join(com_ip[name]))
+      print(format_str % (colored(name, 'cyan'), ', '.join(com_ip[name])))
     for name in direct_targets.keys():
-      print format_str % (colored(name, 'cyan'), dir_ip[name])
+      print(format_str % (colored(name, 'cyan'), dir_ip[name]))
 
   def _show_boards_and_quit(self, msg):
-    print '%s. Choose one of:' % msg
+    print('%s. Choose one of:' % msg)
     brd_names = self._available_board_names()
     brd_names.sort()
     for brd in brd_names:
-      print colored(brd, 'green'), 'with target:'
+      print(colored(brd, 'green'), 'with target:')
       self._show_board_targets(brd)
     sys.exit(1)
 
@@ -255,8 +255,8 @@ class SMake(object):
 
           if BOARD in config:
             if config[BOARD] != os.path.basename(dirpath):
-              print >>sys.stderr, ('Warning: Board name in config should'
-                    ' match its dir name %s' % dirpath)
+              print(('Warning: Board name in config should'
+                    ' match its dir name %s' % dirpath), file=sys.stderr)
             if config[BOARD] in boards:
               raise ValueError('Conflicting board names %s and %s' %
                               (dirpath, boards[config[BOARD]]))
@@ -282,7 +282,7 @@ class SMake(object):
         body = f.read()
         spec_dir = os.path.dirname(path)
         body = body.replace('$(%s)' % SPEC_DIR_VAR, spec_dir)
-        for key, value in self.constants_in_conf.iteritems():
+        for key, value in self.constants_in_conf.items():
           body = body.replace('$(%s)' % key, value)
 
         # Try replacing $VAR statements with env. variables
@@ -297,11 +297,11 @@ class SMake(object):
   def _recursive_config_list(self, search_roots, suffixes=()):
     visited = set()
     suffixes = [None] + list(suffixes)
-    configs = [[] for i in xrange(len(suffixes))]
+    configs = [[] for i in range(len(suffixes))]
 
     def dfs(u):
       if not os.path.isdir(u):
-        print colored('Warning: Package %s does not exist' % u, 'yellow')
+        print(colored('Warning: Package %s does not exist' % u, 'yellow'))
       try:
         visited.add(u)
 
@@ -329,13 +329,13 @@ class SMake(object):
           configs[i].append(config)
 
         if args.show_config_paths:
-          print u
+          print(u)
       except:
-        print 'Error processing: %s' % os.path.join(u, args.conf_name)
+        print('Error processing: %s' % os.path.join(u, args.conf_name))
         raise
 
     if args.show_config_paths:
-      print 'Dependencie paths:'
+      print('Dependencie paths:')
 
     for root in search_roots:
       if root not in visited:
@@ -354,9 +354,9 @@ class SMake(object):
                   paths.append(path)
                   found_p = True
           if not found_p:
-              print colored("WARNING: Dependency %s not found in config\n%s" %
+              print(colored("WARNING: Dependency %s not found in config\n%s" %
                             (p, config[CONF_PATH]),
-                            'yellow')
+                            'yellow'))
       for i in range(len(paths)):
           if paths[i].endswith('/'):
               paths[i] = paths[i][:-1]
@@ -372,18 +372,18 @@ class SMake(object):
         for target_name in config[DIRECT_TARGETS]:
           py_file_path = os.path.join(config[CONF_PATH], target_name + '.py')
           if target_name in targets:
-            print ('Target "%s" ambiguity between %s and %s' %
-                   (target_name, target_impl_paths[target_name], py_file_path))
+            print(('Target "%s" ambiguity between %s and %s' %
+                   (target_name, target_impl_paths[target_name], py_file_path)))
             sys.exit(1)
 
           if not os.path.isfile(py_file_path):
-            print colored('Target "%s" script file %s not found' %
-                   (target_name, py_file_path), 'yellow')
+            print(colored('Target "%s" script file %s not found' %
+                   (target_name, py_file_path), 'yellow'))
             continue
 
 
           sys.path.append(config[CONF_PATH])
-          module = __import__(target_name, globals(), locals(), [], -1)
+          module = __import__(target_name, globals(), locals(), [], 0)
           targets[target_name] = module.BuildStepImpl
           target_impl_paths[target_name] = py_file_path
     return targets, target_impl_paths

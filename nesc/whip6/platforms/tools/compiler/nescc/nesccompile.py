@@ -144,8 +144,8 @@ class NescBuilder(BuildStep):
         if 'LLVM' in version:
           continue
         if c != 'gcc-4.6':
-          print 'WARNING: gcc-4.6 not found. Note that this is the recommended'
-          print 'compiler version for NesC.'
+          print('WARNING: gcc-4.6 not found. Note that this is the recommended')
+          print('compiler version for NesC.')
         return c
       except Exception:
         pass

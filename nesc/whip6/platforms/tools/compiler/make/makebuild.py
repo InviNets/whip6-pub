@@ -36,8 +36,8 @@ class MakeBuildRun(BuildStep):
     include_paths.extend(self.collect_config_list(INCL_PATHS))
     defines = self.collect_config_list(DEFINITIONS)
     cflags = self.collect_config_list(C_FLAGS)
-    cflags.extend(map(lambda p: '-I' + p, include_paths))
-    cflags.extend(map(lambda d: '-D' + d, defines))
+    cflags.extend(['-I' + p for p in include_paths])
+    cflags.extend(['-D' + d for d in defines])
 
     ldflags = self.collect_config_list(LD_FLAGS)
 
@@ -50,15 +50,15 @@ class MakeBuildRun(BuildStep):
     makefile = self.find_config_value(MAKEFILE)
     if not makefile:
         raise RuntimeError('no "%s" specified' % (MAKEFILE,))
-    print >>f, 'APP_NAME :=', app_name
-    print >>f, 'BOARD_NAME :=', self.board
-    print >>f, 'PROJECT_ROOT :=', self.project_root
-    print >>f, 'ALT_PROJECT_ROOT :=', self.alt_project_root
-    print >>f, 'BUILD_DIR :=', self.build_dir
-    print >>f, 'LDFLAGS += ', ' '.join(ldflags)
-    print >>f, 'CFLAGS += ', ' '.join(cflags)
-    print >>f, 'OBJS :=', ' '.join(objects)
-    print >>f, 'include ', makefile
+    print('APP_NAME :=', app_name, file=f)
+    print('BOARD_NAME :=', self.board, file=f)
+    print('PROJECT_ROOT :=', self.project_root, file=f)
+    print('ALT_PROJECT_ROOT :=', self.alt_project_root, file=f)
+    print('BUILD_DIR :=', self.build_dir, file=f)
+    print('LDFLAGS += ', ' '.join(ldflags), file=f)
+    print('CFLAGS += ', ' '.join(cflags), file=f)
+    print('OBJS :=', ' '.join(objects), file=f)
+    print('include ', makefile, file=f)
 
   def run_step(self):
     makeopts = self.collect_config_list(MAKE_OPTS)
